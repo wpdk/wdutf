@@ -1,0 +1,7 @@
+*.log
+*.obj
+*.tmp
+*.exe
+*.pdb
+*.lib
+.vscode/
