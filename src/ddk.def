@@ -1,0 +1,69 @@
+LIBRARY   ddk
+EXPORTS
+	CmKeyObjectType					CONSTANT
+	ExEventObjectType				CONSTANT
+	ExSemaphoreObjectType			CONSTANT
+	IoFileObjectType				CONSTANT
+	PsProcessType					CONSTANT
+	PsThreadType					CONSTANT
+	SeTokenObjectType				CONSTANT
+	TmEnlistmentObjectType			CONSTANT
+	TmResourceManagerObjectType		CONSTANT
+	TmTransactionManagerObjectType	CONSTANT
+	TmTransactionObjectType			CONSTANT
+	MmBadPointer					CONSTANT
+	KeNumberProcessors				CONSTANT
+	NlsMbCodePageTag				CONSTANT
+	NlsMbOemCodePageTag				CONSTANT
+	PcwRegister
+	PcwUnregister
+	PcwCreateInstance
+	PcwCloseInstance
+	PcwAddInstance
+	WmiCompleteRequest
+	WmiSystemControl
+	WmiFireEvent
+	TdiRegisterPnPHandlers
+	TdiDeregisterPnPHandlers
+	InitializeSListHead
+	isdigit
+	isprint
+	swprintf
+	sprintf
+	_snprintf
+	_snwprintf
+	_vsnprintf
+	_strnicmp
+	strncpy
+	strncmp
+	strcmp
+	strcpy
+	strspn
+	_stricmp
+	_wcsicmp
+	_wcsnicmp
+	wcsncmp
+	wcsncpy
+	wcsncpy_s
+	_wcslwr
+	strstr
+	strchr
+	wcsstr
+	atoi
+	toupper
+	tolower
+	towupper
+	towlower
+	_purecall
+	__C_specific_handler
+	__chkstk
+	DbgPrint
+	KeGetProcessorNumberFromIndex
+	KeGetProcessorIndexFromNumber
+	NPI_WSK_INTERFACE_ID			CONSTANT
+	GetIfEntry2
+	GetUnicastIpAddressTable
+	NotifyUnicastIpAddressChange
+	GetUnicastIpAddressEntry
+	CancelMibChangeNotify2
+	FreeMibTable
