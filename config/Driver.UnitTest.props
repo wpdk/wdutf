@@ -8,12 +8,11 @@
     <CoreDir>$(BaseDir)</CoreDir>
     <CommonDir>$(CoreDir)inc\</CommonDir>
     <BinDir>$(BaseDir)Tools\Bin\</BinDir>
-    <WppConfigDir>$(BinDir)WppConfig\</WppConfigDir>
     <SedCmd>$(BinDir)sed.exe</SedCmd>
-    <DbhCmd>$(BinDir)Microsoft\dbh.exe</DbhCmd>
+    <DbhCmd>$(BinDir)dbh.exe</DbhCmd>
    </PropertyGroup>
   <PropertyGroup>
-    <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\</OutDir>
+    <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\vsTest\</OutDir>
     <IntDir>$(BaseDir)build\Intermediate\$(BuildType)-$(CpuType)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup>
@@ -34,7 +33,7 @@
       <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)\..;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
-      <DelayLoadDLLs>dcssup.sys;dcspoll.sys;dcspmf.sys</DelayLoadDLLs>
+      <DelayLoadDLLs></DelayLoadDLLs>
     </Link>
     <Ctrpp>
       <HeaderFileNameForProvider>$(IntDir)%(Filename)_perf.h</HeaderFileNameForProvider>
@@ -91,9 +90,6 @@ link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib
     </BuildMacro>
     <BuildMacro Include="BinDir">
       <Value>$(BinDir)</Value>
-    </BuildMacro>
-    <BuildMacro Include="WppConfigDir">
-      <Value>$(WppConfigDir)</Value>
     </BuildMacro>
     <BuildMacro Include="SedCmd">
       <Value>$(SedCmd)</Value>

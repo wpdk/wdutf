@@ -7,6 +7,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ddk", "src\Ddk.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DdkUnitTest", "test\DdkUnitTest.vcxproj", "{EC884926-BF4A-42EF-8168-107EDB958B9E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDriver", "examples\BasicDriver\BasicDriver.vcxproj", "{7C257DEE-2E49-4343-A624-3FFF722BE00A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDriverUnitTest", "examples\BasicDriverUnitTest\BasicDriverUnitTest.vcxproj", "{E0DC6EF7-B977-4CB1-B7AC-FD63F8833473}"
+	ProjectSection(ProjectDependencies) = postProject
+		{12FAF1AE-B4C9-449F-A188-F03CBA835662} = {12FAF1AE-B4C9-449F-A188-F03CBA835662}
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A} = {7C257DEE-2E49-4343-A624-3FFF722BE00A}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F1E46BFF-13B9-4DF1-A6C1-8DD3305A911B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,9 +31,23 @@ Global
 		{EC884926-BF4A-42EF-8168-107EDB958B9E}.Debug|x64.Build.0 = Debug|x64
 		{EC884926-BF4A-42EF-8168-107EDB958B9E}.Release|x64.ActiveCfg = Release|x64
 		{EC884926-BF4A-42EF-8168-107EDB958B9E}.Release|x64.Build.0 = Release|x64
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A}.Debug|x64.ActiveCfg = Debug|x64
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A}.Debug|x64.Build.0 = Debug|x64
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A}.Debug|x64.Deploy.0 = Debug|x64
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A}.Release|x64.ActiveCfg = Release|x64
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A}.Release|x64.Build.0 = Release|x64
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A}.Release|x64.Deploy.0 = Release|x64
+		{E0DC6EF7-B977-4CB1-B7AC-FD63F8833473}.Debug|x64.ActiveCfg = Debug|x64
+		{E0DC6EF7-B977-4CB1-B7AC-FD63F8833473}.Debug|x64.Build.0 = Debug|x64
+		{E0DC6EF7-B977-4CB1-B7AC-FD63F8833473}.Release|x64.ActiveCfg = Release|x64
+		{E0DC6EF7-B977-4CB1-B7AC-FD63F8833473}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7C257DEE-2E49-4343-A624-3FFF722BE00A} = {F1E46BFF-13B9-4DF1-A6C1-8DD3305A911B}
+		{E0DC6EF7-B977-4CB1-B7AC-FD63F8833473} = {F1E46BFF-13B9-4DF1-A6C1-8DD3305A911B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5E28E2AA-B3DF-4D39-BD2E-43438C98FF89}

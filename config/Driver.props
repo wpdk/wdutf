@@ -9,9 +9,8 @@
     <CoreDir>$(BaseDir)</CoreDir>
     <CommonDir>$(CoreDir)inc\</CommonDir>
     <BinDir>$(BaseDir)Tools\Bin\</BinDir>
-    <WppConfigDir>$(BinDir)WppConfig\</WppConfigDir>
     <SedCmd>$(BinDir)sed.exe</SedCmd>
-    <DbhCmd>$(BinDir)Microsoft\dbh.exe</DbhCmd>
+    <DbhCmd>$(BinDir)dbh.exe</DbhCmd>
     <NoSizedDealloc Condition="'$(PlatformToolsetVersion)'!='120'">/Zc:sizedDealloc-</NoSizedDealloc>
   </PropertyGroup>
   <PropertyGroup>
@@ -120,9 +119,6 @@
     </BuildMacro>
     <BuildMacro Include="BinDir">
       <Value>$(BinDir)</Value>
-    </BuildMacro>
-    <BuildMacro Include="WppConfigDir">
-      <Value>$(WppConfigDir)</Value>
     </BuildMacro>
     <BuildMacro Include="SedCmd">
       <Value>$(SedCmd)</Value>

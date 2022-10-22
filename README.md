@@ -61,6 +61,8 @@ The Windows Driver Unit Test Framework has been tested with:
 
 It is also known to work with earlier versions of the Windows Driver Kit and Visual Studio.
 
+In order to build the example projects, a couple of executables need to be copied into tools\bin. The [README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
+
 <a id="status"></a>
 ## Current Status
 
