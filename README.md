@@ -25,7 +25,8 @@ The scope of the project is currently limited to supporting the kernel features 
 <a id="documentation"></a>
 ## Documentation
 
-Further information about the [design and implementation](https://github.com/wpdk/wdutf/blob/main/doc/design.md) can be found in the [project documentation](https://github.com/wpdk/wdutf/blob/main/doc). This is still a work in progress.
+Further information about the [design and implementation](https://github.com/wpdk/wdutf/blob/main/doc/design.md)
+can be found in the [project documentation](https://github.com/wpdk/wdutf/blob/main/doc). This is still a work in progress.
 
 <a id="source"></a>
 ## Source Code
@@ -38,7 +39,8 @@ git clone https://github.com/wpdk/wdutf
 <a id="start"></a>
 ## Getting Started
 
-The project is designed to be used in conjunction with [Visual Studio](https://visualstudio.microsoft.com/) and the [Windows Driver Kit] (https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk).
+The project is designed to be used in conjunction with [Visual Studio](https://visualstudio.microsoft.com/)
+and the [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk).
 
 
 <a id="prereq"></a>
