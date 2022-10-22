@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <CpuType>$(Platform.ToLower().Replace('x64','amd64').Replace('win32','i386'))</CpuType>
+    <BuildType>$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace($(Configuration.ToLower()), '.*debug.*', 'Debug')), '.*release.*', 'Release'))</BuildType>
+    <BaseDir>$([System.Io.Path]::GetFullPath("$(MsBuildThisFileDirectory)..\"))</BaseDir>
+    <CoreDir>$(BaseDir)</CoreDir>
+    <CommonDir>$(CoreDir)inc\</CommonDir>
+    <BinDir>$(BaseDir)Tools\Bin\</BinDir>
+    <WppConfigDir>$(BinDir)WppConfig\</WppConfigDir>
+    <SedCmd>$(BinDir)sed.exe</SedCmd>
+    <DbhCmd>$(BinDir)Microsoft\dbh.exe</DbhCmd>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\</OutDir>
+    <IntDir>$(BaseDir)build\Intermediate\$(BuildType)-$(CpuType)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LinkIncremental>false</LinkIncremental>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <SupportsPackaging>false</SupportsPackaging>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);$(CommonDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>W2K;WIN2K;WXP;WNET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <WarningVersion>18</WarningVersion>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>powershell.exe -NonInteractive -NoProfile -ExecutionPolicy ByPass -File "$(FixupScript)" "$(TargetPath)"</Command>
+      <Message>Extracting Symbols...</Message>
+    </PostBuildEvent>
+    <Link>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(IntDir);$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Ctrpp>
+      <HeaderFileNameForProvider>$(IntDir)%(Filename)_perf.h</HeaderFileNameForProvider>
+    </Ctrpp>
+    <Ctrpp>
+      <GenerateResourceSourceFile>true</GenerateResourceSourceFile>
+      <ResourceFileName>$(IntDir)%(Filename)_perf.rc</ResourceFileName>
+      <HeaderFileNameForCounter>$(IntDir)%(Filename)_counters.h</HeaderFileNameForCounter>
+    </Ctrpp>
+    <PostBuildEvent>
+      <Command>if exist ctrpp.*.tlog move /y ctrpp.*.tlog "$(IntDir)"  &gt;nul: 2&gt;&amp;1</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Cleanup log files...</Message>
+    </PostBuildEvent>
+    <MessageCompile>
+      <SetCustomerbit>true</SetCustomerbit>
+    </MessageCompile>
+    <CustomBuild>
+      <Outputs>$(TargetDir)%(Filename)%(Extension);%(Outputs)</Outputs>
+      <Message>Copying %(Filename)%(Extension)</Message>
+      <Command>copy "%(FullPath)" "$(TargetDir)" &gt;nul:</Command>
+      <LinkObjects>false</LinkObjects>
+    </CustomBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64;_AMD64_;AMD64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64;_AMD64_;AMD64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BUILD_NUMBER)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>_DCSVERSION_=$(BUILD_NUMBER);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="CpuType">
+      <Value>$(CpuType)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BuildType">
+      <Value>$(BuildType)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BaseDir">
+      <Value>$(BaseDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CoreDir">
+      <Value>$(CoreDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CommonDir">
+      <Value>$(CommonDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BinDir">
+      <Value>$(BinDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="WppConfigDir">
+      <Value>$(WppConfigDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SedCmd">
+      <Value>$(SedCmd)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DbhCmd">
+      <Value>$(DbhCmd)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <BuildNumber>$(BUILD_NUMBER)</BuildNumber>
+    <CpuType>$(Platform.ToLower().Replace('x64','amd64').Replace('win32','i386'))</CpuType>
+    <BuildType>$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace($(Configuration.ToLower()), '.*debug.*', 'Debug')), '.*release.*', 'Release'))</BuildType>
+    <BaseDir>$([System.Io.Path]::GetFullPath("$(MsBuildThisFileDirectory)..\"))</BaseDir>
+    <CoreDir>$(BaseDir)</CoreDir>
+    <CommonDir>$(CoreDir)inc\</CommonDir>
+    <BinDir>$(BaseDir)Tools\Bin\</BinDir>
+    <WppConfigDir>$(BinDir)WppConfig\</WppConfigDir>
+    <SedCmd>$(BinDir)sed.exe</SedCmd>
+    <DbhCmd>$(BinDir)Microsoft\dbh.exe</DbhCmd>
+    <NoSizedDealloc Condition="'$(PlatformToolsetVersion)'!='120'">/Zc:sizedDealloc-</NoSizedDealloc>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\</OutDir>
+    <IntDir>$(BaseDir)build\Intermediate\$(BuildType)-$(CpuType)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <TargetName>Dcs$(TargetName.Replace('Driver',''))</TargetName>
+    <SignMode>Off</SignMode>
+    <SupportsPackaging>false</SupportsPackaging>
+    <EnableInf2cat>false</EnableInf2cat>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(CommonDir);$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>POOL_NX_OPTIN=1;_DCS_KERNEL_;RUN_WPP;WPP_NO_HEADER_FILES;_WIN64;_AMD64_;AMD64;W2K;WIN2K;WXP;WNET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4201;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WppKernelMode>true</WppKernelMode>
+      <WppModuleName>$(TargetName)</WppModuleName>
+      <WppScanConfigurationData>$(CommonDir)TraceWpp.h</WppScanConfigurationData>
+      <WppDllMacro>true</WppDllMacro>
+      <WppEnabled>true</WppEnabled>
+      <WarningVersion>18</WarningVersion>
+    </ClCompile>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Command>copy "%(FullPath)" "$(TargetDir)" &gt;nul:</Command>
+    </CustomBuild>
+    <CustomBuild>
+      <Message>Copying %(Filename)%(Extension)</Message>
+    </CustomBuild>
+    <CustomBuild>
+      <LinkObjects>false</LinkObjects>
+      <Outputs>$(TargetDir)%(Filename)%(Extension);%(Outputs)</Outputs>
+    </CustomBuild>
+    <Link>
+      <AdditionalLibraryDirectories>$(IntDir);$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/SECTION:.rsrc,!D %(AdditionalOptions)</AdditionalOptions>
+      <EntryPointSymbol>DriverEntry</EntryPointSymbol>
+    </Link>
+    <Mofcomp>
+      <WmiSyntaxCheck>true</WmiSyntaxCheck>
+    </Mofcomp>
+    <MessageCompile>
+      <SetCustomerbit>true</SetCustomerbit>
+    </MessageCompile>
+    <Ctrpp>
+      <HeaderFileNameForProvider>$(IntDir)%(Filename)_perf.h</HeaderFileNameForProvider>
+    </Ctrpp>
+    <Ctrpp>
+      <GenerateResourceSourceFile>true</GenerateResourceSourceFile>
+      <ResourceFileName>$(IntDir)%(Filename)_perf.rc</ResourceFileName>
+      <HeaderFileNameForCounter>$(IntDir)%(Filename)_counters.h</HeaderFileNameForCounter>
+    </Ctrpp>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64;_AMD64_;AMD64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>$(NoSizedDealloc) /Zo %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64;_AMD64_;AMD64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>$(NoSizedDealloc) %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BUILD_NUMBER)'!=''">
+    <ClCompile>
+      <PreprocessorDefinitions>_DCSVERSION_=$(BUILD_NUMBER);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Inf>
+      <TimeStamp>$(BUILD_NUMBER)</TimeStamp>
+    </Inf>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="BuildNumber">
+      <Value>$(BuildNumber)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CpuType">
+      <Value>$(CpuType)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BuildType">
+      <Value>$(BuildType)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BaseDir">
+      <Value>$(BaseDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CoreDir">
+      <Value>$(CoreDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CommonDir">
+      <Value>$(CommonDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BinDir">
+      <Value>$(BinDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="WppConfigDir">
+      <Value>$(WppConfigDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SedCmd">
+      <Value>$(SedCmd)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DbhCmd">
+      <Value>$(DbhCmd)</Value>
+    </BuildMacro>
+    <BuildMacro Include="NoSizedDealloc">
+      <Value>$(NoSizedDealloc)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

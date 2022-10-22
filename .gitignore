@@ -4,4 +4,7 @@
 *.exe
 *.pdb
 *.lib
+*.vcxproj.user
 .vscode/
+.vs/
+build/

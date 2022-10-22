@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <CpuType>$(Platform.ToLower().Replace('x64','amd64').Replace('win32','i386'))</CpuType>
+    <BuildType>$([System.Text.RegularExpressions.Regex]::Replace($([System.Text.RegularExpressions.Regex]::Replace($(Configuration.ToLower()), '.*debug.*', 'Debug')), '.*release.*', 'Release'))</BuildType>
+    <BaseDir>$([System.Io.Path]::GetFullPath("$(MsBuildThisFileDirectory)..\"))</BaseDir>
+    <CoreDir>$(BaseDir)</CoreDir>
+    <CommonDir>$(CoreDir)inc\</CommonDir>
+    <BinDir>$(BaseDir)Tools\Bin\</BinDir>
+    <WppConfigDir>$(BinDir)WppConfig\</WppConfigDir>
+    <SedCmd>$(BinDir)sed.exe</SedCmd>
+    <DbhCmd>$(BinDir)Microsoft\dbh.exe</DbhCmd>
+   </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\</OutDir>
+    <IntDir>$(BaseDir)build\Intermediate\$(BuildType)-$(CpuType)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LinkIncremental>false</LinkIncremental>
+    <SupportsPackaging>false</SupportsPackaging>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);$(CommonDir);$(OutDir)\..;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <DisableSpecificWarnings>4201;4316;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <WarningVersion>18</WarningVersion>
+    </ClCompile>
+    <Link>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(OutDir);$(OutDir)\..;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dcssup.sys;dcspoll.sys;dcspmf.sys</DelayLoadDLLs>
+    </Link>
+    <Ctrpp>
+      <HeaderFileNameForProvider>$(IntDir)%(Filename)_perf.h</HeaderFileNameForProvider>
+    </Ctrpp>
+    <Ctrpp>
+      <GenerateResourceSourceFile>true</GenerateResourceSourceFile>
+      <ResourceFileName>$(IntDir)%(Filename)_perf.rc</ResourceFileName>
+      <HeaderFileNameForCounter>$(IntDir)%(Filename)_counters.h</HeaderFileNameForCounter>
+    </Ctrpp>
+    <PostBuildEvent>
+      <Command>if exist ctrpp.*.tlog move /y ctrpp.*.tlog "$(IntDir)"  &gt;nul: 2&gt;&amp;1</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Cleanup log files...</Message>
+    </PostBuildEvent>
+    <MessageCompile>
+      <SetCustomerbit>true</SetCustomerbit>
+    </MessageCompile>
+    <CustomBuild>
+      <Command>$(DbhCmd) "$(TargetDir)..\%(Filename).sys" obj | $(SedCmd) -n -e"/[\/\\]Intermediate[\/\\]/Ip" -e"/^Dcs.*sys/Is/.sys/.lib/Ip" &gt; "$(IntDir)depends.tlog"
+link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib /DEF:%(Identity) /OUT:"$(TargetDir)%(Filename).sys" /PDB:"$(TargetDir)%(Filename).pdb" /IMPLIB:"$(TargetDir)%(Filename).lib" /LIBPATH:"$(OutDir).." /INCREMENTAL:NO /NOLOGO /WX /NODEFAULTLIB /MANIFEST:NO /DEBUG /DLL /OPT:REF /OPT:ICF /ENTRY:"DriverEntry" /RELEASE /MERGE:"_TEXT=.text;_PAGE=PAGE" /PROFILE /SECTION:.rsrc,!D /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221,4108,4088,4218,4218,4235 /pdbcompress /debugtype:pdata</Command>
+      <Outputs>$(TargetDir)%(Filename).sys;%(Outputs)</Outputs>
+      <Message>Relinking %(Filename).sys...</Message>
+      <AdditionalInputs>$(TargetDir)..\%(Filename).sys;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:sizedDealloc- /Zo %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="CpuType">
+      <Value>$(CpuType)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BuildType">
+      <Value>$(BuildType)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BaseDir">
+      <Value>$(BaseDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CoreDir">
+      <Value>$(CoreDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CommonDir">
+      <Value>$(CommonDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BinDir">
+      <Value>$(BinDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="WppConfigDir">
+      <Value>$(WppConfigDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SedCmd">
+      <Value>$(SedCmd)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DbhCmd">
+      <Value>$(DbhCmd)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
