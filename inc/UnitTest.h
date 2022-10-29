@@ -364,6 +364,70 @@ private:
 
 
 /*
+ *	CUnitTestPointer
+ */
+
+template<typename T = PVOID, bool code = true>
+class CUnitTestPointer {
+	const char *name = 0;			// Defined with symbol
+	PVOID value = 0;				// Defined with value
+	PVOID pointer = 0;				// Resolved pointer value
+
+public:
+	CUnitTestPointer(void *addr) : value(addr) { }
+	CUnitTestPointer(void **pAddr) : value(*pAddr) { }
+	CUnitTestPointer(const char *sym) : name(sym) { }
+	CUnitTestPointer(const T func) : value(*(PVOID *)&func) { }
+	CUnitTestPointer(const T *pFunc) : value(*(PVOID *)pFunc) { }
+
+	bool IsValid() {
+		return !name || value || (value = DdkFindFunction(name));
+	}
+
+	PVOID GetPointer() {
+		if (!IsValid())	Assert::Fail(L"Unable to find symbol");
+
+		if (!pointer)
+			pointer = (code) ? DdkCodeFromPointer(value) : value;
+
+		return pointer;
+	}
+
+	operator T() {
+		PVOID v = GetPointer();
+		return *(T *)&v;
+	}
+};
+
+
+/*
+ *	TEST_FIND_FUNCTION(name, returntype, function, declaration)
+ *		Create a pointer with the appropriate type from the address of
+ *		the function, or a fully-qualified string representation of
+ *		its name.
+ *
+ *	TEST_FIND_METHOD(name, classname, returntype, method, declaration)
+ *		Create a pointer with the appropriate type from the address of
+ *		the method, or a fully-qualified string representation of its
+ *		name.
+ *
+ *	TEST_FIND_VARIABLE(name, type, variable)
+ *		Create a pointer with the appropriate type from the address of
+ *		the variable, or a fully-qualified string representation of its
+ *		name.
+ */
+
+#define TEST_FIND_FUNCTION(name,ret,func,decl) \
+	class CUnitTestPointer<ret (*) decl> name(func)
+
+#define TEST_FIND_METHOD(name,cls,ret,func,decl) \
+	class CUnitTestPointer<ret (cls::*) decl> name(func)
+
+#define TEST_FIND_VARIABLE(name,type,var) \
+	class CUnitTestPointer<type *, false> name(var)
+
+
+/*
  *	Logger::PrintMessage
  *		Write a printf formatted string to the test logger.
  */
@@ -395,6 +459,139 @@ public:
 };
 
 #define Logger CUnitTestLogger
+
+
+/*
+ *	CUnitTestDetour
+ */
+
+template<typename NM, typename T>
+struct CUnitTestDetour {
+	CUnitTestPointer<T> pointer;
+
+	CUnitTestDetour(CUnitTestPointer<T> p) : pointer(p) { }
+	~CUnitTestDetour() { DetachDetour(NULL); }
+
+	void AttachDetour(PVOID pThread = DdkGetCurrentThread()) {
+		AttachInstance(NULL, pThread);
+	}
+
+	void DetachDetour(PVOID pThread = DdkGetCurrentThread()) {
+		DetachInstance(this, pThread);
+	}
+
+	void AttachInstance(PVOID pInstance, PVOID pThread = DdkGetCurrentThread()) {
+		auto v = &NM::Intercept;
+		NTSTATUS status = DdkAttachIntercept(
+			pointer.GetPointer(), *(PVOID *)&v, this, pInstance, pThread);
+		Assert::AreEqual(STATUS_SUCCESS, status);
+	}
+
+	void DetachInstance(PVOID pInstance, PVOID pThread = DdkGetCurrentThread()) {
+		NTSTATUS status = DdkDetachIntercept(pInstance, pThread);
+		Assert::AreEqual(STATUS_SUCCESS, status);
+	}
+
+	operator T() { return *pointer; }
+};
+
+
+/*
+ *	CUnitTestRealPointer
+ */
+
+template<typename T>
+class CUnitTestRealPointer {
+	PVOID v;
+public:
+	CUnitTestRealPointer() : v(DdkGetRealPointer()) { }
+	operator T() { return *(T *)&v; }
+};
+
+
+/*
+ *	CUnitTestDetourInstance
+ */
+
+template<typename D>
+class CUnitTestDetourInstance {
+	D& detour;
+public:
+	CUnitTestDetourInstance(D& v, PVOID pThread = DdkGetCurrentThread())
+		: detour(v) { detour.AttachInstance(this, pThread);	}
+	~CUnitTestDetourInstance() { detour.DetachInstance(this, NULL); }
+};
+
+
+/*
+ *	TEST_DEFINE_MOCK_FUNCTION(name, returntype, function, declaration)
+ *		Define a mock for 'function' which has the given return type and
+ *		argument declaration.
+ *
+ *	TEST_DEFINE_MOCK_METHOD(name, classname, returntype, method, declaration)
+ *		Define a mock for 'method' which has the given return type and
+ *		argument declaration.
+ *
+ *	TEST_REAL_FUNCTION(name)
+ *		Call the real function from within the mock.
+ * 
+ *	TEST_REAL_METHOD(name)
+ *		Call the real method from within the mock.
+ *
+ *	TEST_END_MOCK
+ *		Complete the mock definition.
+ *
+ *	TEST_USING_MOCK(name, [thread])
+ *		Enable the mock for the thread for the duration of the current scope.
+ *
+ *	TEST_ENABLE_MOCK(name, [thread])
+ *		Enable the mock for the thread.
+ *
+ *	TEST_DISABLE_MOCK(name, [thread])
+ *		Disable the mock for the thread.
+ */
+
+#define TEST_DEFINE_MOCK_FUNCTION(_name_,_ret_,_func_,_decl_) \
+	struct _name_##_s; \
+	CUnitTestDetour<struct _name_##_s, _ret_(*)_decl_> _name_ = { _func_ }; \
+	struct _name_##_s { static _ret_ Intercept _decl_ { \
+		CUnitTestRealPointer<_ret_(*)_decl_> _real_pointer_;
+
+#define TEST_DEFINE_MOCK_METHOD(_name_,_cls_,_ret_,_func_,_decl_) \
+	struct _name_##_s; \
+	CUnitTestDetour<struct _name_##_s, _ret_(_cls_::*)_decl_> _name_ = { _func_ }; \
+	struct _name_##_s : public _cls_ { _ret_ Intercept _decl_ { \
+		CUnitTestRealPointer<_ret_(_cls_::*)_decl_> _real_pointer_;
+
+#define TEST_REAL_FUNCTION	(*_real_pointer_)
+#define TEST_REAL_METHOD	(this->*_real_pointer_)
+#define TEST_END_MOCK		}};
+
+#define TEST_USING_MOCK(name,...) \
+	CUnitTestDetourInstance<decltype(name)> name##_i(name, ## __VA_ARGS__)
+
+#define TEST_ALL_THREADS				NULL
+#define TEST_ENABLE_MOCK(name,...)		name.AttachDetour(__VA_ARGS__)
+#define TEST_DISABLE_MOCK(name,...)		name.DetachDetour(__VA_ARGS__)
+
+
+/*
+ *	Redefine DdkLoadDriver so that imports are pre-loaded for Detours.
+ *	The local instance of __HrLoadAllImportsForDll has to be used, so
+ *	pass it as a pointer. Redefine DdkUnloadDriver to discard the imports
+ *	because the driver could be reloaded at a different address.
+ */
+
+#pragma comment(lib, "delayimp.lib")
+
+extern "C" HRESULT WINAPI __HrLoadAllImportsForDll(LPCSTR szDll);
+extern "C" BOOL WINAPI __FUnloadDelayLoadedDLL2(LPCSTR szDll);
+
+#define DdkLoadDriver(pFile) \
+	Ddk##LoadDriver(pFile, &__HrLoadAllImportsForDll);
+
+#define DdkUnloadDriver(pName)	\
+	Ddk##UnloadDriver(pName, &__FUnloadDelayLoadedDLL2)
 
 
 #if _MSC_VER < 1920

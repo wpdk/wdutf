@@ -101,12 +101,20 @@
  */
 
 extern "C" {
-DDKAPI NTSTATUS DdkLoadDriver(char *pFile);
+DDKAPI NTSTATUS DdkLoadDriver(char *pFile, HRESULT (*pLoad)(const char *) = NULL);
 DDKAPI NTSTATUS DdkInitDriver(char *pName, PDRIVER_INITIALIZE DriverInit);
-DDKAPI VOID DdkUnloadDriver(char *pName);
+DDKAPI VOID DdkUnloadDriver(char *pName, INT (*pUnload)(const char *) = NULL);
 DDKAPI VOID DdkThreadInit();
+DDKAPI VOID DdkThreadDeinit();
 DDKAPI VOID DdkModuleStart(char *pName, void (*cleanup)());
 DDKAPI BOOLEAN DdkModuleEnd(char *pName);
+DDKAPI PKTHREAD DdkGetCurrentThread();
+DDKAPI PVOID DdkFindFunction(const char *pName);
+DDKAPI PVOID DdkCodeFromPointer(PVOID pAddr);
+DDKAPI NTSTATUS DdkAttachIntercept(PVOID pFunction,
+	PVOID pIntercept, PVOID pIdentity, PVOID pInstance, PVOID pThread);
+DDKAPI NTSTATUS DdkDetachIntercept(PVOID pId, PVOID pThread);
+DDKAPI PVOID DdkGetRealPointer();
 };
 
 

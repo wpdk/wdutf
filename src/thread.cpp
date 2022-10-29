@@ -25,7 +25,12 @@ typedef struct _THREAD : public OBJECT {
 	PPROCESS			process;
 	KPRIORITY			Priority;
 	KPRIORITY			BasePriority;
+	DWORD				ThreadId;
+	struct _THREAD		*next;
 } THREAD, *PTHREAD;
+
+
+void DdkInsertThread();
 
 
 __declspec(thread) PTHREAD DdkCurrentThread = 0;
@@ -37,16 +42,21 @@ DDKAPI PEPROCESS PsInitialSystemProcess = 0;
 static const int DefaultThreadPriority = 8;
 static const int DefaultBaseThreadPriority = 16;
 
+static THREAD *threadlist;
+static SRWLOCK Lock = SRWLOCK_INIT;
+
 
 static DWORD StartThread(PVOID arg)
 {
 	THREAD *pThread = (THREAD *)arg;
 
+	while (pThread->h == NULL) Sleep(1);
+
+	DdkThreadDeinit();
 	DdkCurrentThread = pThread;
 	DdkCurrentProcess = pThread->process;
 	DdkThreadInit();
-
-	while (pThread->h == NULL) Sleep(1);
+	DdkInsertThread();
 
 	(*pThread->Start)(pThread->Context);
 
@@ -81,6 +91,12 @@ void DdkThreadInit()
 		DdkCurrentThread->process = &SystemProcess;
 		DdkCurrentThread->Priority = DefaultThreadPriority;
 		DdkCurrentThread->BasePriority = DefaultBaseThreadPriority;
+
+		if (!DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(),
+				&DdkCurrentThread->h, 0, FALSE, DUPLICATE_SAME_ACCESS))
+			ddkfail("Failed to duplicate thread handle");
+
+		DdkInsertThread();
 	}
 
 	// Update the Thread Environment Block with a pointer to the thread,
@@ -88,6 +104,62 @@ void DdkThreadInit()
 	// The area is named SoftFpcr and seems to be unused.
 
 	__writegsqword(TebCurrentThread, (DWORD64)DdkCurrentThread);
+}
+
+
+void DdkInsertThread()
+{
+	DdkThreadLock();
+	DdkCurrentThread->ThreadId = GetCurrentThreadId();
+
+	for (THREAD *pThread = threadlist; pThread; pThread = pThread->next)
+		if (pThread->ThreadId == DdkCurrentThread->ThreadId)
+			ddkfail("Thread already in list");
+
+	DdkCurrentThread->next = threadlist;
+	threadlist = DdkCurrentThread;
+	DdkThreadUnlock();
+}
+
+
+void DdkThreadDeinit()
+{
+	if (DdkCurrentThread) {
+		DdkDetachIntercept(NULL, DdkGetCurrentThread());
+		DdkThreadLock();
+
+		for (THREAD **pp = &threadlist; *pp; pp = &(*pp)->next)
+			if (*pp == DdkCurrentThread) {
+				*pp = DdkCurrentThread->next;
+				DdkCurrentThread->next = NULL;
+				break;
+			}
+
+		DdkDereferenceObject(DdkCurrentThread);
+		DdkCurrentThread = NULL;
+		DdkThreadUnlock();
+	}
+}
+
+
+LONG DdkInvokeForAllThreads(LONG (*func)(HANDLE))
+{
+	for (THREAD *pThread = threadlist; pThread; pThread = pThread->next) {
+		LONG rc = (*func)((pThread == DdkCurrentThread)
+			? GetCurrentThread() : pThread->h);
+
+		if (rc != NO_ERROR)
+			return rc;
+	}
+
+	return NO_ERROR;
+}
+
+
+PKTHREAD DdkGetCurrentThread()
+{
+	if (!DdkCurrentThread) DdkThreadInit();
+	return (PKTHREAD)ToPointer(DdkCurrentThread);
 }
 
 
@@ -146,8 +218,7 @@ NTSTATUS PsTerminateSystemThread(NTSTATUS ExitStatus)
 {
 	DDKASSERT(KeGetCurrentIrql() == PASSIVE_LEVEL);
 
-	if (DdkCurrentThread)
-		DdkDereferenceObject(DdkCurrentThread);
+	DdkThreadDeinit();
 
 	ExitThread(ExitStatus);
 	return STATUS_UNSUCCESSFUL;
@@ -248,4 +319,14 @@ BOOLEAN PsIsSystemThread(PETHREAD Thread)
 {
 	DDKASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 	return (GetThread(FromPointer(Thread))->process == &SystemProcess);
+}
+
+
+void DdkThreadLock() {
+	AcquireSRWLockExclusive(&Lock);
+}
+
+
+void DdkThreadUnlock() {
+	ReleaseSRWLockExclusive(&Lock);
 }

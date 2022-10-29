@@ -202,6 +202,7 @@ copy "$(OutDir)ddk.pdb" "$(OutDir)vsTest" &gt;nul:</Command>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)Ddk.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="dbg.cpp" />
+    <ClCompile Include="detours.cpp" />
     <ClCompile Include="device.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdddk.h</PrecompiledHeaderFile>
@@ -390,6 +391,9 @@ copy "$(OutDir)ddk.pdb" "$(OutDir)vsTest" &gt;nul:</Command>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Ddk.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="detours_x64.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

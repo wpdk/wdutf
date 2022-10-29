@@ -86,6 +86,7 @@
     </ClCompile>
     <ClCompile Include="BitMapTest.cpp" />
     <ClCompile Include="CpuTest.cpp" />
+    <ClCompile Include="DetoursTest.cpp" />
     <ClCompile Include="DpcTest.cpp" />
     <ClCompile Include="HeaderTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>

@@ -31,6 +31,8 @@ void DdkGetDriverName(char *pFile, char *np, wchar_t *wp);
 void DdkGetDriverPath(char *pFile, char *pPath, char *pName);
 NTSTATUS DdkReferenceDriver(OBJECT *pObj, bool loaded);
 NTSTATUS DdkDriverEntry(PDRIVER_OBJECT DriverObject);
+void DdkDelayLoad(PIMAGE pImage, HRESULT (*pLoad)(const char *));
+void DdkDelayUnload(PIMAGE pImage, INT (*pUnload)(const char *));
 
 
 DRIVER_DISPATCH DdkDefaultDispatch;
@@ -46,7 +48,7 @@ static PDRIVER GetDriver(OBJECT *pObj)
 
 
 DDKAPI
-NTSTATUS DdkLoadDriver(char *pFile)
+NTSTATUS DdkLoadDriver(char *pFile, HRESULT (*pLoadAll)(const char *))
 {
 	char name[MAX_PATH+1], path[MAX_PATH+1];
 	wchar_t wname[MAX_PATH+1];
@@ -62,6 +64,10 @@ NTSTATUS DdkLoadDriver(char *pFile)
 
 	if (pObj) {
 		NTSTATUS rc = DdkReferenceDriver(pObj, true);
+
+		if (pLoadAll && NT_SUCCESS(rc))
+			DdkDelayLoad(GetDriver(pObj)->Image, pLoadAll);
+
 		DdkLoadUnlock();
 		return rc;
 	}
@@ -72,6 +78,9 @@ NTSTATUS DdkLoadDriver(char *pFile)
 	PIMAGE pImage = DdkLoadImage(path, name);
 
 	NTSTATUS rc = DdkCreateDriver(name, DdkGetImageEntry(pImage), pImage);
+
+	if (pLoadAll && NT_SUCCESS(rc))
+		DdkDelayLoad(pImage, pLoadAll);
 
 	DdkLoadUnlock();
 	return rc;
@@ -112,7 +121,7 @@ static NTSTATUS DdkReferenceDriver(OBJECT *pObj, bool loaded)
 
 
 DDKAPI_NODECL
-VOID DdkUnloadDriver(char *pName)
+VOID DdkUnloadDriver(char *pName, INT (*pUnload)(const char *))
 {
 	DdkThreadInit();
 
@@ -125,6 +134,9 @@ VOID DdkUnloadDriver(char *pName)
 	}
 
 	DRIVER *pDriver = GetDriver(pObj);
+
+	if (pUnload && pDriver->Image)
+		DdkDelayUnload(pDriver->Image, pUnload);
 
 	if (pDriver->loadcount && !--(pDriver->loadcount)) {
 		DdkPnpUnload(&pDriver->Driver);

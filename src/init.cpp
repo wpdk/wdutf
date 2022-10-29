@@ -49,6 +49,7 @@ void DdkInit()
 
 void DdkDeinit()
 {
+	DdkDetachIntercept(NULL, NULL);
 	DdkExceptionDeinit();
 }
 
@@ -67,6 +68,7 @@ int DllMain(HANDLE hModule, DWORD reason, PVOID lpReserved)
 			break;
 
 		case DLL_THREAD_DETACH:
+			DdkThreadDeinit();
 			break;
 
 		case DLL_PROCESS_DETACH:

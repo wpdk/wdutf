@@ -39,5 +39,6 @@ In general, a Windows driver has no externally visible symbols. This creates cha
 
 1. Compile and link the code as part of building the unit tests. This ensures that all symbols are available, but doesn't allow testing of the production images.
 2. Relink the driver with an new _.def_ file to export the symbols required for unit testing. The unit tests can then be linked directly against this using _delay load_ to create an external reference that will be satisfied when the framework loads the driver.
+3. Use the Microsoft Detours library to provide access to the private symbols of the driver under test. The macros TEST_FIND_FUNCTION, TEST_FIND_METHOD and TEST_FIND_VARIABLE defined in UnitTest.h implement this.
 
-Work is currently in progress to use the Microsoft Detours library to provide access to the code to be tested and to implement mocking.
+The Microsoft Detours library also allows the behaviour of functions in the driver to be changed by intercepting calls on a per-thread basis. The macro definitions for TEST_DEFINE_MOCK_* in UnitTest.h and test\DetoursTest.cpp provide examples.

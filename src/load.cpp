@@ -12,13 +12,22 @@
  */
 
 #include "stdafx.h"
+#include "delayimp.h"
 
+
+typedef struct _DELAYLOAD {
+	HMODULE module;
+	LONG refcnt;
+} DELAYLOAD, *PDELAYLOAD;
+
+static const int maxmodules = 100;
 
 typedef struct _IMAGE {
 	struct _IMAGE *Next;
 	HMODULE h;
 	PIMAGE_NT_HEADERS64 Header;
 	PDRIVER_INITIALIZE DriverEntry;
+	DELAYLOAD DelayLoad[maxmodules];
 	char *Data;
 	char Name[1];
 } IMAGE, *PIMAGE;
@@ -33,6 +42,9 @@ void DdkUpdateImage(char *pBuffer, DWORD size, DWORD *pEntry);
 bool DdkWriteImage(char *pBuffer, char *pLoad, DWORD size);
 bool DdkGetWriteTime(char *pPath, FILETIME *pTime);
 char *DdkGetTempDir();
+NTSTATUS DdkDetachAddressRange(PVOID pAddr, size_t len, HMODULE module);
+HMODULE DdkFindModule(PVOID pAddr);
+char *DdkFindDLLName(HMODULE h, char *pName);
 
 static CRITICAL_SECTION Lock;
 
@@ -92,6 +104,60 @@ PIMAGE DdkLoadImage(char *pPath, char *pName)
 	DdkSaveImageData(p);
 	DdkImageList = p;
 	return p;
+}
+
+
+void DdkDelayLoad(PIMAGE pImage, HRESULT (*pLoad)(const char *))
+{
+	if (!pImage || !pLoad) return;
+
+	DELAYLOAD *pDelay = pImage->DelayLoad;
+	HMODULE h = DdkFindModule(pLoad);
+	int i, empty = -1;
+
+	if (!h) return;
+
+	for (i = maxmodules - 1; i >= 0; i--)
+		if (pDelay[i].module == h) break;
+		else if (!pDelay[i].module) empty = i;
+
+	if (i < 0 && (i = empty) < 0)
+		ddkfail("Unable to reference driver");
+
+	pDelay[i].module = h;
+	pDelay[i].refcnt++;
+
+	char *pDLL = DdkFindDLLName(h, pImage->Name);
+	if (pDLL) (*pLoad)(pDLL);
+}
+
+
+void DdkDelayUnload(PIMAGE pImage, INT (*pUnload)(const char *))
+{
+	if (!pImage || !pUnload) return;
+
+	DELAYLOAD *pDelay = pImage->DelayLoad;
+	HMODULE h = DdkFindModule(pUnload);
+
+	if (!h) return;
+
+	for (int i = 0; i < maxmodules; i++)
+		if (pDelay[i].module == h) {
+			if (pDelay[i].refcnt-- > 1) return;
+			pDelay[i].module = NULL;
+			break;
+		}
+
+	// Remove any remaining detours
+
+	IMAGE_OPTIONAL_HEADER64 *pOpt = &pImage->Header->OptionalHeader;
+	NTSTATUS status = DdkDetachAddressRange((PVOID)pOpt->ImageBase, pOpt->SizeOfImage, h);
+
+	if (!NT_SUCCESS(status))
+		ddkfail("Unable to detach detours for module");
+
+	char *pDLL = DdkFindDLLName(h, pImage->Name);
+	if (pDLL) (*pUnload)(pDLL);
 }
 
 
@@ -234,7 +300,22 @@ static bool DdkWriteImage(char *pBuffer, char *pLoad, DWORD size)
 
 VOID DdkUnloadImage(PIMAGE pImage)
 {
+	IMAGE_OPTIONAL_HEADER64 *pOpt = &pImage->Header->OptionalHeader;
+	PDELAYLOAD pDelay = pImage->DelayLoad;
 	HMODULE h;
+
+	// Check for residual references
+
+	for (int i = 0; i < maxmodules; i++)
+		if (pDelay[i].module && pDelay[i].refcnt)
+			ddkfail("Driver still referenced");
+
+	// Detach any remaining detours
+
+	NTSTATUS status = DdkDetachAddressRange((PVOID)pOpt->ImageBase, pOpt->SizeOfImage, NULL);
+
+	if (!NT_SUCCESS(status))
+		ddkfail("Unable to detach detours from image");
 
 	FreeLibrary(pImage->h);
 
@@ -257,6 +338,29 @@ VOID DdkUnloadImage(PIMAGE pImage)
 PDRIVER_INITIALIZE DdkGetImageEntry(PIMAGE pImage)
 {
 	return pImage->DriverEntry;
+}
+
+
+char *DdkFindDLLName(HMODULE h, char *pName)
+{
+	IMAGE_OPTIONAL_HEADER64 *pOpt = &((PIMAGE_NT_HEADERS64)((ULONG_PTR)h
+		+ ((PIMAGE_DOS_HEADER)h)->e_lfanew))->OptionalHeader;
+
+	IMAGE_DATA_DIRECTORY *pDelay =
+		&pOpt->DataDirectory[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT];
+
+	if (!pDelay->Size) return NULL;
+
+	size_t len = strlen(pName);
+
+	for (PCImgDelayDescr pDesc = (PCImgDelayDescr)((char *)h +
+			pDelay->VirtualAddress); pDesc->rvaDLLName != 0; pDesc++) {
+		if (!strnicmp(pName, (char *)h + pDesc->rvaDLLName, len)
+				&& !stricmp((char *)h + pDesc->rvaDLLName + len, ".sys"))
+			return (char *)h + pDesc->rvaDLLName;
+	}
+
+	return NULL;
 }
 
 

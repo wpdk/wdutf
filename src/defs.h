@@ -70,6 +70,10 @@ VOID DdkWriteCR8(ULONG64 v);
 WCHAR *DdkAllocUnicodeBuffer(size_t len);
 char *DdkAllocAnsiBuffer(size_t len);
 BOOLEAN DdkWaitLastReference(POBJECT pObj, int maxsecs, int count);
+void DdkThreadLock();
+void DdkThreadUnlock();
+LONG DdkInvokeForAllThreads(LONG (*func)(HANDLE));
+
 
 #define EXCEPTION_UNITTEST_ASSERTION   (DWORD)0xe3530001
 
