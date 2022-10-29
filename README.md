@@ -39,7 +39,8 @@ Sample code demonstrating the use of the unit test framework will be added in th
 
 The source code can be obtained using:
 ~~~{.sh}
-git clone https://github.com/wpdk/wdutf
+git clone --recurse-submodules https://github.com/wpdk/wdutf
+
 ~~~
 
 <a id="start"></a>
@@ -48,7 +49,14 @@ git clone https://github.com/wpdk/wdutf
 The project is designed to be used in conjunction with [Visual Studio](https://visualstudio.microsoft.com/)
 and the [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk).
 
-The project can be built using the Visual Studio solution WDUTF.sln.
+Build the Detours library by opening a Developer Command Prompt for Visual Studio:
+
+~~~{.sh}
+cd detours\src
+nmake
+~~~
+
+The project can then be built using the Visual Studio solution WDUTF.sln.
 
 <a id="prereq"></a>
 ## Runtime Prerequisites

@@ -7,6 +7,7 @@
     <BaseDir>$([System.Io.Path]::GetFullPath("$(MsBuildThisFileDirectory)..\"))</BaseDir>
     <CoreDir>$(BaseDir)</CoreDir>
     <CommonDir>$(CoreDir)inc\</CommonDir>
+    <DetoursDir>$(BaseDir)Detours\</DetoursDir>
     <BinDir>$(BaseDir)Tools\Bin\</BinDir>
     <SedCmd>$(BinDir)sed.exe</SedCmd>
     <DbhCmd>$(BinDir)dbh.exe</DbhCmd>
@@ -70,6 +71,9 @@
     </BuildMacro>
     <BuildMacro Include="CommonDir">
       <Value>$(CommonDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DetoursDir">
+      <Value>$(DetoursDir)</Value>
     </BuildMacro>
     <BuildMacro Include="BinDir">
       <Value>$(BinDir)</Value>
