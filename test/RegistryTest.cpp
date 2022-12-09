@@ -1,20 +1,11 @@
-/*****************************************************************************
- *                                                                           *
- *                        NOTICE                                             *
- *                                                                           *
- *           COPYRIGHT (c) 2022 DATACORE SOFTWARE CORPORATION                *
- *                                                                           *
- *                    ALL RIGHTS RESERVED                                    *
- *                                                                           *
- *                                                                           *
- *    This Computer Program is CONFIDENTIAL and a TRADE SECRET of            *
- *    DATACORE SOFTWARE CORPORATION. Any reproduction of this program        *
- *    without the express written consent of DATACORE SOFTWARE CORPORATION   *
- *    is a violation of the copyright laws and may subject you to criminal   *
- *    prosecution.                                                           *
- *                                                                           *
- *****************************************************************************/
-
+/*-
+ *  SPDX-License-Identifier: BSD-3-Clause
+ *
+ *  Copyright (c) 2022, DataCore Software Corporation. All rights reserved.
+ *
+ *  Details about the Windows Kernel API are based on the documentation
+ *  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
+ */
 
 /*
  *	Registry Tests
