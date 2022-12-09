@@ -41,7 +41,6 @@ char *DdkReadImage(char *pPath, DWORD *pSize);
 void DdkUpdateImage(char *pBuffer, DWORD size, DWORD *pEntry);
 bool DdkWriteImage(char *pBuffer, char *pLoad, DWORD size);
 bool DdkGetWriteTime(char *pPath, FILETIME *pTime);
-char *DdkGetTempDir();
 NTSTATUS DdkDetachAddressRange(PVOID pAddr, size_t len, HMODULE module);
 HMODULE DdkFindModule(PVOID pAddr);
 char *DdkFindDLLName(HMODULE h, char *pName);
@@ -82,7 +81,7 @@ PIMAGE DdkLoadImage(char *pPath, char *pName)
 		ddkfail("Unable to read driver file");
 
 	DdkUpdateImage(pBuffer, size, &entry);
-	sprintf(tmp, "%s%s.sys", DdkGetTempDir(), pName);
+	DdkGetLocalPath(tmp, sizeof(tmp), "\\Windows\\System32\\drivers", pName, ".sys");
 
 	if (!DdkWriteImage(pBuffer, tmp, size))
 		ddkfail("Unable to write driver file");
@@ -433,57 +432,4 @@ bool DdkGetWriteTime(char *pPath, FILETIME *pTime)
         
     CloseHandle(h);
 	return true;
-}
-
-
-static void DdkCleanTempDir(char *pDir)
-{
-	char path[MAX_PATH+40];
-	WIN32_FIND_DATA find;
-
-	sprintf(path, "%s\\*.*", pDir);
-	char *cp = strrchr(path, '\\') + 1;
-
-	HANDLE h = FindFirstFile(path, &find);
-	if (h == INVALID_HANDLE_VALUE) return;
-
-	do {
-		if (strcmp(find.cFileName, ".") && strcmp(find.cFileName, "..")) {
-			strcpy(cp, find.cFileName);
-
-			if (find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-				DdkCleanTempDir(path);
-				RemoveDirectory(path);
-			}
-
-			else DeleteFile(path);
-		}
-	} while (FindNextFile(h, &find));
-
-	FindClose(h);
-}
-
-
-static char *DdkGetTempDir()
-{
-	static char path[MAX_PATH+40];
-
-	if (path[0]) return path;
-
-	if (!GetTempPath(MAX_PATH+1, path))
-		ddkfail("Unable to get temporary file path");
-
-	strcat(path, "ddk\\\0");
-	HANDLE h = CreateMutex(NULL, FALSE, "Global\\DDKTempDir");
-
-	if (h && GetLastError() == ERROR_SUCCESS)
-		DdkCleanTempDir(path);
-
-	CreateDirectory(path, NULL);
-	sprintf(&path[strlen(path)], "%x\\", GetCurrentProcessId());
-
-	if (!CreateDirectory(path, NULL))
-		ddkfail("Unable to create temporary directory");
-
-	return path;
 }

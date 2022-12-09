@@ -505,3 +505,26 @@ NTSTATUS RtlUTF8ToUnicodeN(PWSTR UnicodeStringDestination, ULONG UnicodeStringMa
 
 	return status;
 }
+
+
+WCHAR *DdkUnicodeToString(UNICODE_STRING *u, WCHAR remove)
+{
+	if (!u) return NULL;
+
+	USHORT start = 0;
+
+	if (remove) {
+		while (start + sizeof(WCHAR) - 1 < u->Length &&
+				u->Buffer[start / sizeof(WCHAR)] == remove)
+			start += sizeof(WCHAR);
+	}
+
+	char *s = (char *)malloc(u->Length + sizeof(WCHAR) - start);
+	if (!s) ddkfail("Unable to allocate memory");
+
+	if (u->Length - start)
+		memcpy(s, (char *)u->Buffer + start, u->Length - start);
+
+	memset(s + u->Length - start, 0, sizeof(WCHAR));
+	return (WCHAR *)s;
+}

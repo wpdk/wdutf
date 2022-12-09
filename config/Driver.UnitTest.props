@@ -10,7 +10,7 @@
     <BinDir>$(BaseDir)Tools\Bin\</BinDir>
     <SedCmd>$(BinDir)sed.exe</SedCmd>
     <DbhCmd>$(BinDir)dbh.exe</DbhCmd>
-   </PropertyGroup>
+  </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\vsTest\</OutDir>
     <IntDir>$(BaseDir)build\Intermediate\$(BuildType)-$(CpuType)\$(ProjectName)\</IntDir>
@@ -33,7 +33,8 @@
       <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>$(OutDir);$(OutDir)\..;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
-      <DelayLoadDLLs></DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
     <Ctrpp>
       <HeaderFileNameForProvider>$(IntDir)%(Filename)_perf.h</HeaderFileNameForProvider>
@@ -71,6 +72,9 @@ link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <Link>
+      <SupportUnloadOfDelayLoadedDLL>true</SupportUnloadOfDelayLoadedDLL>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="CpuType">

@@ -19,9 +19,13 @@ void DdkCpuInit();
 void DdkTimeInit();
 void DdkNameInit();
 void DdkLoadInit();
+void DdkLocalInit();
+void DdkRegistryInit();
 void DdkTestInit();
 void DdkWaitInit();
 void DdkPnpInit();
+void DdkRegistryDeinit();
+void DdkLocalDeinit();
 void DdkExceptionInit();
 void DdkExceptionDeinit();
 
@@ -36,6 +40,8 @@ void DdkInit()
 		DdkCpuInit();
 		DdkTimeInit();
 		DdkNameInit();
+		DdkLocalInit();
+		DdkRegistryInit();
 		DdkLoadInit();
 		DdkTestInit();
 		DdkWaitInit();
@@ -50,6 +56,8 @@ void DdkInit()
 void DdkDeinit()
 {
 	DdkDetachIntercept(NULL, NULL);
+	DdkRegistryDeinit();
+	DdkLocalDeinit();
 	DdkExceptionDeinit();
 }
 

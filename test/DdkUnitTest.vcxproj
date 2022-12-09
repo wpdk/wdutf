@@ -95,6 +95,7 @@
     <ClCompile Include="DeviceTest.cpp" />
     <ClCompile Include="DriverTest.cpp" />
     <ClCompile Include="EventTest.cpp" />
+    <ClCompile Include="RegistryTest.cpp" />
     <ClCompile Include="RtlTest.cpp" />
     <ClCompile Include="StringTest.cpp" />
     <ClCompile Include="Test.cpp" />

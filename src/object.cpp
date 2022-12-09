@@ -47,9 +47,23 @@ OBJECT *DdkAllocObject(size_t size, USHORT type, bool opt)
 
 void DdkFreeObject(OBJECT *pObj)
 {
-	if (pObj->type == IoFileType) DdkFreeFileObject(pObj);
-	if (pObj->type == IoDriverType) DdkFreeDriverObject(pObj);
-	if (pObj->type == IoDeviceType) DdkFreeDeviceObject(pObj);
+	switch (pObj->type) {
+	case IoFileType:
+		DdkFreeFileObject(pObj);
+		break;
+
+	case IoDriverType:
+		DdkFreeDriverObject(pObj);
+		break;
+
+	case IoDeviceType:
+		DdkFreeDeviceObject(pObj);
+		break;
+
+	case KeyType:
+		DdkFreeKeyObject(pObj);
+		break;
+	}
 
 	if (pObj->h) {
 		DDKASSERT(pObj->h != GetCurrentProcess());

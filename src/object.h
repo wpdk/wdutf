@@ -26,7 +26,8 @@ enum _OBJECTTYPE {
 	MinObjectType = 0x2dc0, EventType, MutexType, SemaphoreType, ThreadType,
 	TimerType, ProcessType, SecurityTokenType, EnlistmentType,
 	ResourceManagerType, TransactionManagerType, TransactionType, CmKeyType,
-	IoFileType, IoDeviceType, IoDriverType, IoSymbolicLinkType, MaxObjectType
+	IoFileType, IoDeviceType, IoDriverType, IoSymbolicLinkType, KeyType,
+	MaxObjectType
 };
 
 typedef struct _OBJECT_TYPE {
@@ -57,7 +58,8 @@ inline bool isHandleObject(OBJECT *pObj) {
 		&& (pObj->type == EventType || pObj->type == SemaphoreType || pObj->type == ThreadType
 		|| pObj->type == ProcessType || pObj->type == IoFileType || pObj->type == SecurityTokenType
 		|| pObj->type == EnlistmentType || pObj->type == ResourceManagerType
-		|| pObj->type == TransactionManagerType || pObj->type == TransactionType));
+		|| pObj->type == TransactionManagerType || pObj->type == TransactionType
+		|| pObj->type == KeyType));
 }
 
 

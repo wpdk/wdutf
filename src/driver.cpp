@@ -183,6 +183,12 @@ NTSTATUS DdkCreateDriver(char *pName, PDRIVER_INITIALIZE DriverInit, PIMAGE Imag
 	for (ULONG i = 0; i <= IRP_MJ_MAXIMUM_FUNCTION; i++)
 		pDriver->Driver.MajorFunction[i] = DdkDefaultDispatch;
 
+	wchar_t params[MAX_PATH+1];
+	swprintf(params, sizeof(params), L"%s\\Parameters", pDriver->Name);
+
+	RtlCreateRegistryKey(RTL_REGISTRY_SERVICES, pDriver->Name);
+	RtlCreateRegistryKey(RTL_REGISTRY_SERVICES, params);
+
 	NTSTATUS rc = DdkDriverEntry(&pDriver->Driver);
 
 	if (!NT_SUCCESS(rc)) {

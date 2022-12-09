@@ -115,6 +115,8 @@ DDKAPI NTSTATUS DdkAttachIntercept(PVOID pFunction,
 	PVOID pIntercept, PVOID pIdentity, PVOID pInstance, PVOID pThread);
 DDKAPI NTSTATUS DdkDetachIntercept(PVOID pId, PVOID pThread);
 DDKAPI PVOID DdkGetRealPointer();
+DDKAPI void DdkCreateRegistryKey(ULONG RelativeTo, PWSTR Path);
+DDKAPI void DdkDeleteRegistryKey(ULONG RelativeTo, PWSTR Path);
 };
 
 

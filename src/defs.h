@@ -56,6 +56,7 @@ PFILE_OBJECT DdkGetFilePointer(HANDLE FileHandle);
 void DdkFreeFileObject(OBJECT *pObj);
 void DdkFreeDriverObject(OBJECT *pObj);
 void DdkFreeDeviceObject(OBJECT *pObj);
+void DdkFreeKeyObject(OBJECT *pObj);
 POBJECT DdkResolveSymbolicLink(OBJECT *pObj);
 BOOLEAN DdkIsDeviceInterface(PUNICODE_STRING path, BOOLEAN all);
 NTSTATUS DdkCreateDriver(char *pName, PDRIVER_INITIALIZE DriverInit, PIMAGE Image);
@@ -73,6 +74,8 @@ BOOLEAN DdkWaitLastReference(POBJECT pObj, int maxsecs, int count);
 void DdkThreadLock();
 void DdkThreadUnlock();
 LONG DdkInvokeForAllThreads(LONG (*func)(HANDLE));
+WCHAR *DdkUnicodeToString(UNICODE_STRING *u, WCHAR remove = 0);
+void DdkGetLocalPath(char *buffer, size_t len, char *path, char *file, char *suffix = "");
 
 
 #define EXCEPTION_UNITTEST_ASSERTION   (DWORD)0xe3530001
