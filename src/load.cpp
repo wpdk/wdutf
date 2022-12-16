@@ -81,7 +81,7 @@ PIMAGE DdkLoadImage(char *pPath, char *pName)
 		ddkfail("Unable to read driver file");
 
 	DdkUpdateImage(pBuffer, size, &entry);
-	DdkGetLocalPath(tmp, sizeof(tmp), "\\Windows\\System32\\drivers", pName, ".sys");
+	DdkGetLocalPath(tmp, sizeof(tmp), "C:\\Windows\\System32\\drivers", pName, ".sys");
 
 	if (!DdkWriteImage(pBuffer, tmp, size))
 		ddkfail("Unable to write driver file");

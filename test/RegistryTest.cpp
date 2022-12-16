@@ -193,6 +193,9 @@ namespace DdkUnitTest
 
 			Assert::AreEqual(STATUS_OBJECT_NAME_NOT_FOUND, status);
 			Assert::AreEqual((HANDLE)NULL, h);
+
+			status = ZwClose(base);
+			Assert::AreEqual(STATUS_SUCCESS, status);
 		}
 
 		/*

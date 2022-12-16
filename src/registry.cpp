@@ -53,7 +53,7 @@ void DdkRegistryInit()
 {
 	char path[MAX_PATH+1];
 
-	DdkGetLocalPath(path, sizeof(path), "\\Windows\\System32\\Config", "hive.dat");
+	DdkGetLocalPath(path, sizeof(path), "C:\\Windows\\System32\\Config", "hive.dat");
 
 	if (RegLoadAppKeyA(path, &hive, KEY_ALL_ACCESS,
 			REG_PROCESS_APPKEY, NULL) != ERROR_SUCCESS)

@@ -75,6 +75,7 @@ void DdkThreadLock();
 void DdkThreadUnlock();
 LONG DdkInvokeForAllThreads(LONG (*func)(HANDLE));
 WCHAR *DdkUnicodeToString(UNICODE_STRING *u, WCHAR remove = 0);
+void DdkGetLocalPath(WCHAR *buffer, int len, UNICODE_STRING *path, bool create);
 void DdkGetLocalPath(char *buffer, size_t len, char *path, char *file, char *suffix = "");
 
 
