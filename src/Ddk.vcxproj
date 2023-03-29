@@ -20,12 +20,14 @@
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>WindowsApplicationForDrivers10.0</PlatformToolset>
+    <TargetVersion>Windows10</TargetVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>WindowsApplicationForDrivers10.0</PlatformToolset>
+    <TargetVersion>Windows10</TargetVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -386,11 +388,11 @@ copy "$(OutDir)ddk.pdb" "$(OutDir)vsTest" &gt;nul:</Command>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="ddk.def">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib.exe /NOLOGO /OUT:"$(TargetDir)ddkcrt.lib" "$(FrameworkSdkDir)\lib\win7\km\x64\BufferOverflowK.lib" "$(FrameworkSdkDir)\lib\win7\km\x64\ntoskrnl.lib" /REMOVE:ntoskrnl.exe /ignore:4221,4006</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">lib.exe /NOLOGO /OUT:"$(TargetDir)ddkcrt.lib" "$(DDK_LIB_PATH)BufferOverflowK.lib" "$(DDK_LIB_PATH)ntoskrnl.lib" /REMOVE:ntoskrnl.exe /ignore:4221,4006</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Creating ddkcrt.lib...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)ddkcrt.lib;%(Outputs)</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">lib.exe /NOLOGO /OUT:"$(TargetDir)ddkcrt.lib" "$(FrameworkSdkDir)\lib\win7\km\x64\BufferOverflowK.lib" "$(FrameworkSdkDir)\lib\win7\km\x64\ntoskrnl.lib" /REMOVE:ntoskrnl.exe /ignore:4221,4006</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">lib.exe /NOLOGO /OUT:"$(TargetDir)ddkcrt.lib" "$(DDK_LIB_PATH)BufferOverflowK.lib" "$(DDK_LIB_PATH)ntoskrnl.lib" /REMOVE:ntoskrnl.exe /ignore:4221,4006</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Creating ddkcrt.lib...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)ddkcrt.lib;%(Outputs)</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>

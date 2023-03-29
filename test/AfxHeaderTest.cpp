@@ -23,6 +23,10 @@
 #include "stdafx.h"
 
 
+void AfxThrowMemoryException() { }
+void AfxThrowOleException(LONG) { }
+
+
 namespace DdkUnitTest
 {
 	TEST_CLASS(DdkAfxHeaderTest)

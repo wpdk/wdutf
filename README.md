@@ -63,9 +63,9 @@ The project can then be built using the Visual Studio solution WDUTF.sln.
 
 The Windows Driver Unit Test Framework has been tested with:
 
-* Visual Studio 2019
-* Windows Driver Kit (10.0.22000.1)
-* Windows SDK (10.0.22000.1)
+* Visual Studio 2022
+* Windows Driver Kit (10.0.22621.0)
+* Windows SDK (10.0.22621.0)
 
 It is also known to work with earlier versions of the Windows Driver Kit and Visual Studio.
 
