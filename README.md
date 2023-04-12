@@ -40,7 +40,6 @@ Sample code demonstrating the use of the unit test framework will be added in th
 The source code can be obtained using:
 ~~~{.sh}
 git clone --recurse-submodules https://github.com/wpdk/wdutf
-
 ~~~
 
 <a id="start"></a>
@@ -67,6 +66,12 @@ The Windows Driver Unit Test Framework has been tested with:
 * Windows Driver Kit (10.0.22621.0)
 * Windows SDK (10.0.22621.0)
 
+The following Visual Studio individual components need to be installed:
+
+* C++ ATL for latest build tools
+* C++ ATL for latest build tools with Spectre Mitigations
+* C++ MFC for latest build tools with Spectre mitigations
+
 It is also known to work with earlier versions of the Windows Driver Kit and Visual Studio.
 
 In order to build the example projects, a couple of executables need to be copied into tools\bin. The [README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
@@ -84,7 +89,6 @@ The scope of the project is currently limited to supporting the kernel features 
 In particular:
 
 * Minimal support for the Kernel Mode Driver Framework.
-
 * Currently only x64 builds are supported.
 
 <a id="issues"></a>
