@@ -32,9 +32,14 @@ void DdkExceptionDeinit();
 static bool initialised = false;
 static struct _DdkInit { _DdkInit() { DdkInit(); } } _DdkInit;
 
+static HMODULE DdkModule;
+
 
 void DdkInit()
 {
+	if (!DdkModule)
+		DdkModule = GetModuleHandle(NULL);
+
 	if (!initialised) {
 		DdkExceptionInit();
 		DdkCpuInit();
@@ -63,11 +68,12 @@ void DdkDeinit()
 
 
 extern "C"
-int DllMain(HANDLE hModule, DWORD reason, PVOID lpReserved)
+int DllMain(HINSTANCE hModule, DWORD reason, PVOID lpReserved)
 {
     switch (reason)
 	{
 		case DLL_PROCESS_ATTACH:
+			DdkModule = hModule;
 			DdkInit();
 			break;
 
@@ -85,4 +91,11 @@ int DllMain(HANDLE hModule, DWORD reason, PVOID lpReserved)
     }
 
     return TRUE;
+}
+
+
+PVOID
+DdkGetProcAddress(char *name)
+{
+	return GetProcAddress(DdkModule, name);
 }

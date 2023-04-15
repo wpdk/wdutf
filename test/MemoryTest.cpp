@@ -30,5 +30,26 @@ namespace DdkUnitTest
 			Assert::IsTrue(addr.QuadPart == 0x123456789I64);
 		}
 
+		TEST_METHOD(DdkMemoryGetSystemRoutine)
+		{
+			UNICODE_STRING u = RTL_CONSTANT_STRING(L"RtlGetVersion");
+			PVOID addr = MmGetSystemRoutineAddress(&u);
+			Assert::IsNotNull(addr);
+			Assert::AreEqual((PVOID)&RtlGetVersion, addr);
+		}
+
+		TEST_METHOD(DdkMemoryGetSystemRoutineFail)
+		{
+			UNICODE_STRING u = RTL_CONSTANT_STRING(L"RtlGetVersion2");
+			PVOID addr = MmGetSystemRoutineAddress(&u);
+			Assert::IsNull(addr);
+		}
+
+		TEST_METHOD(DdkMemoryGetSystemRoutineDdk)
+		{
+			UNICODE_STRING u = RTL_CONSTANT_STRING(L"DdkThreadInit");
+			PVOID addr = MmGetSystemRoutineAddress(&u);
+			Assert::IsNull(addr);
+		}
 	};
 }

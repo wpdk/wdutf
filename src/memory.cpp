@@ -16,6 +16,8 @@
 
 #undef MmMapLockedPagesSpecifyCache
 
+extern PVOID DdkGetProcAddress(char *name);
+
 
 DDKAPI
 VOID MmProbeAndLockPages(PMDLX Mdl,
@@ -86,11 +88,17 @@ PHYSICAL_ADDRESS MmGetPhysicalAddress(PVOID BaseAddress)
 DDKAPI
 PVOID MmGetSystemRoutineAddress(PUNICODE_STRING SystemRoutineName)
 {
-	UNICODE_STRING getver = RTL_CONSTANT_STRING(L"RtlGetVersion");
+	char name[256];
 
-	if (RtlCompareUnicodeString(SystemRoutineName, &getver, FALSE) == 0)
-		return &RtlGetVersion;
+	int n = _snprintf(name, sizeof(name), "%.*S",
+		(int)(SystemRoutineName->Length / sizeof(WCHAR)),
+		SystemRoutineName->Buffer);
 
-	// TODO - other routines
-	return 0;
+	if (n < 1 || n > sizeof(name) - 1)
+		return NULL;
+
+	if (strnicmp(name, "ddk", 3) == 0)
+		return NULL;
+
+	return DdkGetProcAddress(name);
 }
