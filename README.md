@@ -2,13 +2,13 @@
 
 The Windows Driver Unit Test Framework (WDUTF) enables the unit testing of Windows kernel drivers using the [Microsoft Unit Testing Framework for C++](https://learn.microsoft.com/en-us/visualstudio/test/how-to-use-microsoft-test-framework-for-cpp?view=vs-2022), which runs in user space.
 
-The project grew out of work being done by [DataCore](https://datacore.com/) to develop and test a world class, high-performance, storage stack running on Windows.
-
-Runing unit tests against code written for the Windows Kernel environment is hard. There have been a few projects that try to embed a unit test framework in the kernel, but they suffer from the compexity of having to load a driver, collect the output and handle crashes. We wanted to do something better; to create a user space environment where kernel code can run unmodified and tests can be examined using the Visual Studio debugger.
+Running unit tests against code written for the Windows Kernel environment is hard. There have been a few projects that try to embed a unit test framework in the kernel, but they suffer from the compexity of having to load a driver, collect the output and handle crashes. We wanted to do something better; to create a user space environment where kernel code can run unmodified and tests can be examined using the Visual Studio debugger.
 
 The initial version of the project consisted of a user space library implementing portions of the kernel infrastructure. This has now been extended to allow binary code built for the kernel to be loaded into the unit test environment and executed. Much of the kernel functionality is stubbed out, but the framework is sufficient to allow credible tests to be performed.
 
-DataCore's experience has been that bringing the simplicity and flexibility of user space development to kernel drivers can significantly reduce development time and improve project outcomes. The project is being contributed to the [Windows Platform Development Kit](https://wpdk.github.io/) to enable others to benefit from it.
+Our experience has been that bringing the simplicity and flexibility of user space development to kernel drivers can significantly reduce development time and improve project outcomes. The project is being contributed to the [Windows Platform Development Kit](https://wpdk.github.io/) to enable others to benefit from it.
+
+[rtegrity](https://rtegrity.com/) is leading the ongoing development of the project, which grew out of work done by [DataCore](https://datacore.com/) to develop and test a world class, high-performance, storage stack running on Windows.
 
 # In this ReadMe
 
@@ -79,12 +79,12 @@ In order to build the example projects, a couple of executables need to be copie
 <a id="status"></a>
 ## Current Status
 
-The project has been in use at [DataCore](https://datacore.com/) for many years. It is considered to be stable, but is currently limited to the kernel features required by DataCore's own driver stack.
+The project has been in use for many years. It is considered to be stable, but is currently limited to the kernel features required by DataCore's own driver stack.
 
 <a id="limitations"></a>
 ## Limitations
 
-The scope of the project is currently limited to supporting the kernel features used by [DataCore](https://datacore.com/) drivers, but it is being made available to the community as a resource that can be developed and further extended.
+The scope of the project is currently limited to supporting the kernel features used by DataCore drivers, but it is being made available to the community as a resource that can be developed and further extended.
 
 In particular:
 
@@ -113,11 +113,11 @@ There are currently no external dependencies.
 
 <a id="acknowledge"></a>
 ## Acknowledments
-The Windows Driver Unit Test Framework has been developed and contributed by [DataCore](https://datacore.com/).
+[rtegrity](https://rtegrity.com/) is leading the ongoing development of the Windows Driver Unit Test Framework, which has been contributed by [DataCore](https://datacore.com/).
 
 <a id="core"></a>
 ## Core Maintainers
 
 The [core maintainers](https://github.com/wpdk/wdutf/blob/main/MAINTAINERS.md) primary responsibility is to provide technical oversight for the WDUTF Project. The current list includes:
-* [Nick Connolly](https://github.com/nconnolly1), [DataCore](https://datacore.com/)
+* [Nick Connolly](https://github.com/nconnolly1), [rtegrity](https://rtegrity.com/)
 * [Robert Bassett](https://github.com/datacore-rbassett), [DataCore](https://datacore.com/)
