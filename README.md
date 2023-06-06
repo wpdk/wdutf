@@ -112,7 +112,7 @@ Contributions are welcome and needed! In these initial stages of the project, pl
 There are currently no external dependencies.
 
 <a id="acknowledge"></a>
-## Acknowledments
+## Acknowledgements
 [rtegrity](https://rtegrity.com/) is leading the ongoing development of the Windows Driver Unit Test Framework, which has been contributed by [DataCore](https://datacore.com/).
 
 <a id="core"></a>
