@@ -12,6 +12,7 @@ Class = System
 ClassGuid = {4d36e97d-e325-11ce-bfc1-08002be10318} 
 CatalogFile=DcsBasic.cat
 DriverVer=01/16/2001, 4.0.0
+PnPLockdown=1
 
 [DestinationDirs]
 DefaultDestDir   = 12
