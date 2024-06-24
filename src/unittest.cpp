@@ -87,7 +87,7 @@ void DdkTestAdd(char *pName)
 
 	for (int i = 0; i < maxv; i++)
 		if (!vec[i]) {
-			vec[i] = strdup(name);
+			vec[i] = _strdup(name);
 			break;
 		}
 }

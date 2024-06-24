@@ -73,7 +73,7 @@ PIMAGE DdkLoadImage(char *pPath, char *pName)
 	DWORD size, entry;
 
 	for (PIMAGE pEntry = DdkImageList; pEntry; pEntry = pEntry->Next)
-		if (!stricmp(pEntry->Name, pName)) return pEntry;
+		if (!_stricmp(pEntry->Name, pName)) return pEntry;
 
 	char *pBuffer = DdkReadImage(pPath, &size);
 
@@ -255,13 +255,13 @@ static void DdkUpdateImage(char *pBuffer, DWORD size, DWORD *pEntry)
 	// Link against ddk.dll
 
 	for (DWORD i = 0; i < size; i++) {
-		if (!strnicmp(&pBuffer[i], "ntoskrnl.exe", 12))
+		if (!_strnicmp(&pBuffer[i], "ntoskrnl.exe", 12))
 			strcpy(&pBuffer[i], "ddk.dll");
 		
-		else if (!strnicmp(&pBuffer[i], "hal.dll", 7))
+		else if (!_strnicmp(&pBuffer[i], "hal.dll", 7))
 			strcpy(&pBuffer[i], "ddk.dll");
 
-		else if (!strnicmp(&pBuffer[i], "wmilib.sys", 10))
+		else if (!_strnicmp(&pBuffer[i], "wmilib.sys", 10))
 			strcpy(&pBuffer[i], "ddk.dll");
 	}
 
@@ -354,8 +354,8 @@ char *DdkFindDLLName(HMODULE h, char *pName)
 
 	for (PCImgDelayDescr pDesc = (PCImgDelayDescr)((char *)h +
 			pDelay->VirtualAddress); pDesc->rvaDLLName != 0; pDesc++) {
-		if (!strnicmp(pName, (char *)h + pDesc->rvaDLLName, len)
-				&& !stricmp((char *)h + pDesc->rvaDLLName + len, ".sys"))
+		if (!_strnicmp(pName, (char *)h + pDesc->rvaDLLName, len)
+				&& !_stricmp((char *)h + pDesc->rvaDLLName + len, ".sys"))
 			return (char *)h + pDesc->rvaDLLName;
 	}
 

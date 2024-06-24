@@ -120,13 +120,13 @@ PVOID DdkFindFunction(const char *pName)
 		if (len) {
 			if (!(cp = strrchr(path, '\\'))) cp = strrchr(path, '/');
 			cp = cp ? cp + 1 : path;
-			if (strnicmp(cp, pName, len) || (cp[len] && cp[len] != '.'))
+			if (_strnicmp(cp, pName, len) || (cp[len] && cp[len] != '.'))
 				continue;
 		}
 
 		// Deprioritise non-driver modules in system paths
 
-		if (!(cp = strrchr(path, '.')) || stricmp(cp, ".sys"))
+		if (!(cp = strrchr(path, '.')) || _stricmp(cp, ".sys"))
 			if ((slen && _strnicmp(path, system, slen) == 0) ||
 					(plen && _strnicmp(path, program, plen) == 0)) {
 				if (!pSysAddr)

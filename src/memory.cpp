@@ -97,7 +97,7 @@ PVOID MmGetSystemRoutineAddress(PUNICODE_STRING SystemRoutineName)
 	if (n < 1 || n > sizeof(name) - 1)
 		return NULL;
 
-	if (strnicmp(name, "ddk", 3) == 0)
+	if (_strnicmp(name, "ddk", 3) == 0)
 		return NULL;
 
 	return DdkGetProcAddress(name);

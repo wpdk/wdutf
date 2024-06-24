@@ -932,7 +932,7 @@ DdkCheckKeyExists(ULONG RelativeTo, PCWSTR Path, bool parent)
 
 	WCHAR *s = (WCHAR *)Path, *cp;
 
-	if (parent && (s = wcsdup(Path))) {
+	if (parent && (s = _wcsdup(Path))) {
 		if ((cp = wcsrchr(s, L'\\'))) *cp = L'\0';
 		else *s = L'\0';
 	}
