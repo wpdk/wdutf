@@ -21,8 +21,13 @@ PVOID MmBadPointer = 0;
 PVOID pMmBadPointer = (PVOID)&MmBadPointer;
 
 #undef KeNumberProcessors
+#if defined(_X86_) || defined(_AMD64_)
 volatile CCHAR KeNumberProcessors;
 volatile CCHAR _KeNumberProcessors;
+#else
+CCHAR KeNumberProcessors;
+CCHAR _KeNumberProcessors;
+#endif
 
 #undef NlsMbCodePageTag
 BOOLEAN NlsMbCodePageTag = FALSE;

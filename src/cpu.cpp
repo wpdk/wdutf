@@ -17,8 +17,13 @@
 #undef KeNumberProcessors
 
 extern "C" {
+#if defined(_X86_) || defined(_AMD64_)
 extern volatile CCHAR KeNumberProcessors;
 extern volatile CCHAR _KeNumberProcessors;
+#else
+extern CCHAR KeNumberProcessors;
+extern CCHAR _KeNumberProcessors;
+#endif
 };
 
 
