@@ -16,6 +16,19 @@
 
 
 /*
+ *	Architure specific definitions.
+ */
+
+#if defined(_X86_) || defined(_AMD64_)
+#define WRAPPER_LEN	16
+#else
+#define WRAPPER_LEN 24
+#endif
+
+#define MAXIMUM_JUMP 0x80000000U
+
+
+/*
  *	Detours is designed to attach a single, essentially static, intercept to a
  *	function. In a Unit Test environment, multiple short-lived tests, requiring
  *	different intercepts, can be running concurrently.
@@ -42,7 +55,7 @@ typedef struct _INTERCEPT {
  */
 
 typedef struct _DETOUR {
-	char wrapper[16];			// Wrapper code (must be first element)
+	char wrapper[WRAPPER_LEN];	// Wrapper code (must be first element)
 	struct _REGION *region;		// Region
 	PVOID function;				// Original function
 	PVOID trampoline;			// Trampoline
@@ -368,7 +381,7 @@ static NTSTATUS DdkFreeIntercept(INTERCEPT *pEntry)
 static bool DdkIsRegionWithinJumpBounds(REGION *pRegion,
 	PVOID pFunction, int slack = 0)
 {
-	unsigned int maxjump = 0x80000000U - slack;
+	unsigned int maxjump = MAXIMUM_JUMP - slack;
 	char *pAddr = (char *)pFunction;
 
 	if (pAddr >= (char *)pRegion
