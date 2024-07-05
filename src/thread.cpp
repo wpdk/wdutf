@@ -99,11 +99,13 @@ void DdkThreadInit()
 		DdkInsertThread();
 	}
 
+#if defined(_X86_) || defined(_AMD64_)
 	// Update the Thread Environment Block with a pointer to the thread,
 	// allowing the inline version of KeGetCurrentThread() to run unchanged.
 	// The area is named SoftFpcr and seems to be unused.
 
 	__writegsqword(TebCurrentThread, (DWORD64)DdkCurrentThread);
+#endif
 }
 
 
