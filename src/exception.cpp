@@ -14,6 +14,13 @@
 #include "stdafx.h"
 
 
+#if defined(_X86_) || defined(_AMD64_)
+#define REGISTER_COUNT	16
+#else
+#define REGISTER_COUNT	31
+#endif
+
+
 extern "C" LONG DdkExceptionHandler(EXCEPTION_POINTERS *xp);
 
 static PVOID DdkVectoredHandle;
@@ -42,8 +49,13 @@ static DWORD64 *DdkGetRegister(EXCEPTION_POINTERS *xp, UCHAR reg)
 	// Assumes that the registers are stored in instruction decode
 	// order which is currently true and likely to remain so.
 
+#if defined(_X86_) || defined(_AMD64_)
 	DWORD64 *pReg = &xp->ContextRecord->Rax;
 	return &pReg[reg & 0xf];
+#else
+	DWORD64* pReg = &xp->ContextRecord->X0;
+	return &pReg[reg & 0x1f];
+#endif
 }
 
 
@@ -69,7 +81,7 @@ static LONG DdkAccessException(EXCEPTION_POINTERS *xp)
 		// rather than decoding the instructions just fixup the
 		// registers and continue.
 
-		for (UCHAR i = 0; i < 16; i++) {
+		for (UCHAR i = 0; i < REGISTER_COUNT; i++) {
 			DWORD64 *pReg = DdkGetRegister(xp, i);
 
 			if ((ULONG64)(*pReg) == addr) {
@@ -87,6 +99,7 @@ static LONG DdkAccessException(EXCEPTION_POINTERS *xp)
 
 static LONG DdkPrivException(EXCEPTION_POINTERS *xp)
 {
+#if defined(_X86_) || defined(_AMD64_)
 	UCHAR *op = (UCHAR *)(xp->ExceptionRecord->ExceptionAddress);
 
 	// Check for CR8 access (irql value)
@@ -110,7 +123,7 @@ static LONG DdkPrivException(EXCEPTION_POINTERS *xp)
 		xp->ContextRecord->Rip += 4;
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
-
+#endif
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
