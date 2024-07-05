@@ -76,6 +76,14 @@ VOID KeLowerIrql(KIRQL NewIrql)
 
 
 DDKAPI
+VOID KfLowerIrql(KIRQL NewIrql)
+{
+	DDKASSERT(KeGetCurrentIrql() >= NewIrql);
+	DdkCurrentIrql = NewIrql;
+}
+
+
+DDKAPI
 KIRQL DdkRaiseIrqlToDpcLevel()
 {
 	return KfRaiseIrql(DISPATCH_LEVEL);
