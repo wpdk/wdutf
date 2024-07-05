@@ -35,7 +35,7 @@ void DdkPnpInit()
 
 NTSTATUS DdkPnpCreateDevice(PDRIVER_OBJECT DriverObject)
 {
-	PDEVICE_OBJECT DeviceObject;
+	PDEVICE_OBJECT DeviceObject = NULL;
 
 	if (!DriverObject->DriverExtension->AddDevice)
 		return STATUS_SUCCESS;
