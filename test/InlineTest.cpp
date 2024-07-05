@@ -18,11 +18,13 @@
 #define NT_INLINE_IRQL
 #define NT_INLINE_GET_CURRENT_IRQL
 
+#if defined(_X86_) || defined(_AMD64_)
 #define KeGetCurrentThread DdkUnitTest_KeGetCurrentThread
 #define PsGetCurrentThread DdkUnitTest_PsGetCurrentThread
 #define KeGetCurrentIrql DdkUnitTest_KeGetCurrentIrql
 #define KzLowerIrql DdkUnitTest_KzLowerIrql
 #define KzRaiseIrql DdkUnitTest_KzRaiseIrql
+#endif
 
 #include "stdafx.h"
 
