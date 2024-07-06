@@ -29,7 +29,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(CommonDir);$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>POOL_NX_OPTIN=1;_DCS_KERNEL_;RUN_WPP;WPP_NO_HEADER_FILES;_WIN64;_AMD64_;AMD64;W2K;WIN2K;WXP;WNET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>POOL_NX_OPTIN=1;_DCS_KERNEL_;RUN_WPP;WPP_NO_HEADER_FILES;_WIN64;W2K;WIN2K;WXP;WNET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4201;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -87,6 +87,18 @@
   <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PreprocessorDefinitions>_WIN64;_AMD64_;AMD64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>$(NoSizedDealloc) %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64;_ARM64_;ARM64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>$(NoSizedDealloc) /Zo %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN64;_ARM64_;ARM64;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>$(NoSizedDealloc) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
