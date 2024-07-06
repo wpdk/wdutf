@@ -54,11 +54,21 @@
       <SetCustomerbit>true</SetCustomerbit>
     </MessageCompile>
     <CustomBuild>
-      <Command>$(DbhCmd) "$(TargetDir)..\%(Filename).sys" obj | $(SedCmd) -n -e"/[\/\\]Intermediate[\/\\]/Ip" -e"/^Dcs.*sys/Is/.sys/.lib/Ip" &gt; "$(IntDir)depends.tlog"
-link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib /DEF:%(Identity) /OUT:"$(TargetDir)%(Filename).sys" /PDB:"$(TargetDir)%(Filename).pdb" /IMPLIB:"$(TargetDir)%(Filename).lib" /LIBPATH:"$(OutDir).." /INCREMENTAL:NO /NOLOGO /WX /NODEFAULTLIB /MANIFEST:NO /DEBUG /DLL /OPT:REF /OPT:ICF /ENTRY:"DriverEntry" /RELEASE /MERGE:"_TEXT=.text;_PAGE=PAGE" /PROFILE /SECTION:.rsrc,!D /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221,4108,4088,4218,4218,4235 /pdbcompress /debugtype:pdata</Command>
       <Outputs>$(TargetDir)%(Filename).sys;%(Outputs)</Outputs>
       <Message>Relinking %(Filename).sys...</Message>
       <AdditionalInputs>$(TargetDir)..\%(Filename).sys;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <CustomBuild>
+      <Command>$(DbhCmd) "$(TargetDir)..\%(Filename).sys" obj | $(SedCmd) -n -e"/[\/\\]Intermediate[\/\\]/Ip" -e"/^Dcs.*sys/Is/.sys/.lib/Ip" &gt; "$(IntDir)depends.tlog"
+link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib /DEF:%(Identity) /OUT:"$(TargetDir)%(Filename).sys" /PDB:"$(TargetDir)%(Filename).pdb" /IMPLIB:"$(TargetDir)%(Filename).lib" /LIBPATH:"$(OutDir).." /INCREMENTAL:NO /NOLOGO /WX /NODEFAULTLIB /MANIFEST:NO /DEBUG /DLL /OPT:REF /OPT:ICF /ENTRY:"DriverEntry" /RELEASE /MERGE:"_TEXT=.text;_PAGE=PAGE" /PROFILE /SECTION:.rsrc,!D /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221,4108,4088,4218,4218,4235 /pdbcompress /debugtype:pdata</Command>
+    </CustomBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='ARM64'">
+    <CustomBuild>
+      <Command>$(DbhCmd) "$(TargetDir)..\%(Filename).sys" obj | $(SedCmd) -n -e"/[\/\\]Intermediate[\/\\]/Ip" -e"/^Dcs.*sys/Is/.sys/.lib/Ip" &gt; "$(IntDir)depends.tlog"
+link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib arm64rt.lib /LTCG /DEF:%(Identity) /OUT:"$(TargetDir)%(Filename).sys" /PDB:"$(TargetDir)%(Filename).pdb" /IMPLIB:"$(TargetDir)%(Filename).lib" /LIBPATH:"$(OutDir).." /INCREMENTAL:NO /NOLOGO /WX /NODEFAULTLIB /MANIFEST:NO /DEBUG /DLL /OPT:REF /OPT:ICF /ENTRY:"DriverEntry" /RELEASE /MERGE:"_TEXT=.text;_PAGE=PAGE" /PROFILE /SECTION:.rsrc,!D /IGNORE:4198,4010,4037,4039,4065,4070,4078,4087,4089,4221,4108,4088,4218,4218,4235 /pdbcompress /debugtype:pdata</Command>
     </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|x64'">
@@ -68,6 +78,21 @@ link.exe "%(TargetDir)ddkinline.obj" @"$(IntDir)depends.tlog" ddkcrt.lib ddk.lib
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SupportUnloadOfDelayLoadedDLL>true</SupportUnloadOfDelayLoadedDLL>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:sizedDealloc- /Zo %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(BuildType)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
