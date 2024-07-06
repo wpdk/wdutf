@@ -233,5 +233,8 @@
     <MASM Include="detours_x64.asm">
       <Filter>Source Files</Filter>
     </MASM>
+    <MASM Include="detours_arm64.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
