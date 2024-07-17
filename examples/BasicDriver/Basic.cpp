@@ -61,7 +61,7 @@ BasicCreateClose(
 }
 
 
-LONG
+__declspec(noinline) LONG
 PrivateTestFunction(LONG v)
 {
     return v + 1;
