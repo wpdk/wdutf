@@ -35,18 +35,27 @@ namespace BasicDriverUnitTest
 		{
 		}
 
-		TEST_METHOD(BasicDriverTest)
+		TEST_METHOD(ExportedCFunction)
 		{
 			LONG v = BasicTestFunction(10);
 
-			Assert::IsTrue(v == 11);
+			Assert::IsTrue(v == 12);
 		}
 
-		TEST_METHOD(BasicDriverTest2)
+		TEST_METHOD(ExportedCPPFunction)
 		{
 			LONG v = BasicTestFunction2(10);
 
-			Assert::IsTrue(v == 12);
+			Assert::IsTrue(v == 13);
+		}
+
+		TEST_METHOD(PrivateFunction)
+		{
+			TEST_FIND_FUNCTION(testfunc, LONG, "PrivateTestFunction", (LONG v));
+
+			LONG v = testfunc(10);
+
+			Assert::IsTrue(v == 11);
 		}
 	};
 }

@@ -10,8 +10,10 @@
 #include "Trace.h"
 
 extern "C" {
-NTSTATUS DriverEntry (PDRIVER_OBJECT, PUNICODE_STRING);
-NTSTATUS BasicCreateClose(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp);
+DRIVER_INITIALIZE DriverEntry;
+DRIVER_UNLOAD DriverUnload;
+DRIVER_DISPATCH BasicCreateClose;
+
 LONG BasicTestFunction(LONG v);
 }
 
@@ -24,12 +26,22 @@ DriverEntry(
 {
 	ExInitializeDriverRuntime(DrvRtPoolNxOptIn);
 
-	WPP_INIT_TRACING(DriverObject, RegistryPath);
+    WPP_INIT_TRACING(DriverObject, RegistryPath);
 
 	DriverObject->MajorFunction[IRP_MJ_CREATE] = BasicCreateClose;
 	DriverObject->MajorFunction[IRP_MJ_CLOSE] = BasicCreateClose;
-	
+
+    DriverObject->DriverUnload = DriverUnload;
 	return STATUS_SUCCESS;
+}
+
+
+VOID
+DriverUnload(
+	IN PDRIVER_OBJECT DriverObject
+	)
+{
+	WPP_CLEANUP(DriverObject);
 }
 
 
@@ -50,14 +62,21 @@ BasicCreateClose(
 
 
 LONG
-BasicTestFunction(LONG v)
+PrivateTestFunction(LONG v)
 {
     return v + 1;
 }
 
 
 LONG
+BasicTestFunction(LONG v)
+{
+    return PrivateTestFunction(v) + 1;
+}
+
+
+LONG
 BasicTestFunction2(LONG v)
 {
-    return v + 2;
+    return PrivateTestFunction(v) + 2;
 }
