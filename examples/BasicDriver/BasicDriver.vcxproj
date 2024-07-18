@@ -129,6 +129,7 @@
     <ClCompile Include="Basic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicIoctl.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Trace.h" />
   </ItemGroup>
