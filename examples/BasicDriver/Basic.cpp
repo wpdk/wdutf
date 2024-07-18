@@ -87,11 +87,19 @@ BasicCreateClose(
 }
 
 
+/*
+ *  Ensure that the test function is not inlined and is large
+ *  enough to be detoured by disabling optimisation.
+ */
+#pragma optimize("", off)
+
 __declspec(noinline) LONG
 PrivateTestFunction(LONG v)
 {
     return v + 1;
 }
+
+#pragma optimize("", on)
 
 
 LONG
