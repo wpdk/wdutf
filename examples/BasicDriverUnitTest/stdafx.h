@@ -17,3 +17,5 @@
 
 #include "targetver.h"
 #include "UnitTest.h"
+
+#include "BasicIoctl.h"

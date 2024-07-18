@@ -2,6 +2,7 @@
  *  SPDX-License-Identifier: BSD-3-Clause
  *
  *  Copyright (c) 1998-2015, DataCore Software Corporation. All rights reserved.
+ *  Copyright (c) 2024, rtegrity ltd. All rights reserved.
  */
 
 /*
@@ -10,13 +11,9 @@
 
 #include "stdafx.h"
 
-extern "C" LONG BasicTestFunction(LONG v);
-
-extern LONG BasicTestFunction2(LONG v);
-
 
 namespace BasicDriverUnitTest
-{		
+{
 	TEST_MODULE_INITIALIZE(BasicDriverUnitTestInit)
 	{
 		TEST_MODULE_START(BasicDriverUnitTestCleanup);
@@ -31,31 +28,33 @@ namespace BasicDriverUnitTest
 
 	TEST_CLASS(BasicDriverUnitTest)
 	{
+		PFILE_OBJECT pFile;
+
+		TEST_METHOD_INITIALIZE(BasicDriverUnitTestInit)
+		{
+			DdkThreadInit();
+			pFile = NULL;
+		}
+
+		TEST_METHOD_CLEANUP(BasicDriverUnitTestCleanup)
+		{
+			if (pFile) ObDereferenceObject(pFile);
+		}
+
+		// Load driver and check device
+
 		TEST_METHOD(BasicDriverLoad)
 		{
-		}
+			PDEVICE_OBJECT pDevice;
+			UNICODE_STRING u;
 
-		TEST_METHOD(ExportedCFunction)
-		{
-			LONG v = BasicTestFunction(10);
+			RtlUnicodeStringInit(&u, L"\\Device\\Basic");
 
-			Assert::IsTrue(v == 12);
-		}
+			NTSTATUS rc = IoGetDeviceObjectPointer(&u, 0, &pFile, &pDevice);
 
-		TEST_METHOD(ExportedCPPFunction)
-		{
-			LONG v = BasicTestFunction2(10);
-
-			Assert::IsTrue(v == 13);
-		}
-
-		TEST_METHOD(PrivateFunction)
-		{
-			TEST_FIND_FUNCTION(testfunc, LONG, "PrivateTestFunction", (LONG v));
-
-			LONG v = testfunc(10);
-
-			Assert::IsTrue(v == 11);
+			Assert::IsTrue(NT_SUCCESS(rc));
+			Assert::IsNotNull(pDevice);
+			Assert::IsTrue(pFile->DeviceObject == pDevice);
 		}
 	};
 }
