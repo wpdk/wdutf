@@ -1,7 +1,7 @@
 ;;-
 ;;  SPDX-License-Identifier: BSD-3-Clause
 ;;
-;;  Copyright (c) 2022, DataCore Software Corporation. All rights reserved.
+;;  Copyright (c) 2024, rtegrity ltd. All rights reserved.
 ;;
 ;;  Details about the Windows Kernel API are based on the documentation
 ;;  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
