@@ -53,21 +53,21 @@ The following Visual Studio workloads need to be installed:
 * Windows application development
 * Linux and embedded development with C++
 
-The following Visual Studio individual components are also needed (for either x64 or arm64):
+The following Visual Studio individual components are also needed (for either x64 or arm64 as appropriate):
 
-* MSVC v143 - VS 2022 C++ with Spectre Mitigations
-* C++ ATL for latest build tools
-* C++ ATL for latest build tools with Spectre Mitigations
-* C++ MFC for latest build tools
-* C++ MFC for latest build tools with Spectre Mitigations
 * MSVC v140 - VS 2015 build tools
+* MSVC v143 - VS 2022 C++ with Spectre Mitigations (latest)
+* C++ ATL for latest v143 build tools
+* C++ ATL for latest v143 build tools with Spectre Mitigations
+* C++ MFC for latest v143 build tools
+* C++ MFC for latest v143 build tools with Spectre Mitigations
 
-The following are also required:
+The following are also required (installed in the following order):
 
+* [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) (10.0.26100.1)
 * [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
 (10.0.26100.1)
-* [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) (10.0.26100.1)
-* [Microsoft Visual C++ 2022 Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
+* [Microsoft Visual C++ 2022 Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) (x64 or arm64)
 
 The Windows Driver Unit Test Framework is known to work with earlier versions of the Windows Driver Kit and Visual Studio.
 
@@ -90,7 +90,7 @@ nmake
 ~~~
 
 The Windows Driver Unit Test Framework project can then be built using
-the Visual Studio solution WDUTF.sln.
+the Visual Studio solution WDUTF.sln. Ensure that the configuration is set to the correct processor architecture before building. The Test Explorer can be opened with the menu entry Test/Test Explorer.
 
 <a id="status"></a>
 ## Current Status
