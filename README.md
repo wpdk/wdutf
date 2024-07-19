@@ -32,7 +32,7 @@ Our experience has been that bringing the simplicity and flexibility of user spa
 Further information about the [design and implementation](https://github.com/wpdk/wdutf/blob/main/doc/design.md)
 can be found in the [project documentation](https://github.com/wpdk/wdutf/blob/main/doc). This is still a work in progress.
 
-Sample code demonstrating the use of the unit test framework will be added in the near future.
+Basic sample code demonstrating the use of the unit test framework can be found in [examples](https://github.com/wpdk/wdutf/blob/main/examples). The unit tests in [test](https://github.com/wpdk/wdutf/blob/main/test) provide more advanced examples of using the framework.
 
 <a id="source"></a>
 ## Source Code
@@ -48,33 +48,47 @@ git clone --recurse-submodules https://github.com/wpdk/wdutf
 The project is designed to be used in conjunction with [Visual Studio](https://visualstudio.microsoft.com/)
 and the [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk).
 
-Build the Detours library by opening a Developer Command Prompt for Visual Studio:
+Firstly, build the Detours library by opening a Developer Command Prompt for Visual Studio and running the following commands:
 
 ~~~{.sh}
+# Only on arm64: Ensure that the target is correctly set
+VsDevCmd -arch=arm64
+
 cd detours\src
 nmake
 ~~~
 
-The project can then be built using the Visual Studio solution WDUTF.sln.
+The Windows Driver Unit Test Framework project can then be built using
+the Visual Studio solution WDUTF.sln.
 
 <a id="prereq"></a>
 ## Runtime Prerequisites
 
-The Windows Driver Unit Test Framework has been tested with:
+The Windows Driver Unit Test Framework has been tested on both x64 and arm64 with:
 
 * Visual Studio 2022
-* Windows Driver Kit (10.0.22621.0)
-* Windows SDK (10.0.22621.0)
+* Windows Driver Kit (10.0.26100.1)
+* Windows SDK (10.0.26100.1)
 
-The following Visual Studio individual components need to be installed:
+The following Visual Studio workloads need to be installed:
+
+* Desktop development with C++
+* Windows application development
+* Linux and embedded development with C++
+
+The following Visual Studio individual components are also needed:
 
 * C++ ATL for latest build tools
 * C++ ATL for latest build tools with Spectre Mitigations
 * C++ MFC for latest build tools with Spectre mitigations
+* MSVC v140 - VS 2015 build tools
 
-It is also known to work with earlier versions of the Windows Driver Kit and Visual Studio.
+It is also necessary to install:
+* [Microsoft Visual C++ 2022 Redistributable (arm64)](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 
-In order to build the example projects, a couple of executables need to be copied into tools\bin. The [README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
+The Windows Driver Unit Test Framework is known to work with earlier versions of the Windows Driver Kit and Visual Studio.
+
+In order to build the example projects, a couple of executables need to be copied into tools\bin. The [tools\bin\README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
 
 <a id="status"></a>
 ## Current Status
@@ -89,7 +103,6 @@ The scope of the project is currently limited to supporting the kernel features 
 In particular:
 
 * Minimal support for the Kernel Mode Driver Framework.
-* Currently only x64 builds are supported.
 
 <a id="issues"></a>
 ## Known Issues
