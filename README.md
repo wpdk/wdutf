@@ -37,10 +37,41 @@ Basic sample code demonstrating the use of the unit test framework can be found 
 <a id="source"></a>
 ## Source Code
 
-The source code can be obtained using:
+The source code can be obtained using [git](https://git-scm.com/):
 ~~~{.sh}
 git clone --recurse-submodules https://github.com/wpdk/wdutf
 ~~~
+
+<a id="prereq"></a>
+## Runtime Prerequisites
+
+The Windows Driver Unit Test Framework has been tested on both x64 and arm64 with [Visual Studio Community 2022](https://visualstudio.microsoft.com/vs/). 
+
+The following Visual Studio workloads need to be installed:
+
+* Desktop development with C++
+* Windows application development
+* Linux and embedded development with C++
+
+The following Visual Studio individual components are also needed (for either x64 or arm64):
+
+* MSVC v143 - VS 2022 C++ with Spectre Mitigations
+* C++ ATL for latest build tools
+* C++ ATL for latest build tools with Spectre Mitigations
+* C++ MFC for latest build tools
+* C++ MFC for latest build tools with Spectre Mitigations
+* MSVC v140 - VS 2015 build tools
+
+The following are also required:
+
+* [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
+(10.0.26100.1)
+* [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) (10.0.26100.1)
+* [Microsoft Visual C++ 2022 Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
+
+The Windows Driver Unit Test Framework is known to work with earlier versions of the Windows Driver Kit and Visual Studio.
+
+In order to build the example projects, a couple of executables need to be copied into tools\bin. The [tools\bin\README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
 
 <a id="start"></a>
 ## Getting Started
@@ -60,35 +91,6 @@ nmake
 
 The Windows Driver Unit Test Framework project can then be built using
 the Visual Studio solution WDUTF.sln.
-
-<a id="prereq"></a>
-## Runtime Prerequisites
-
-The Windows Driver Unit Test Framework has been tested on both x64 and arm64 with:
-
-* Visual Studio 2022
-* Windows Driver Kit (10.0.26100.1)
-* Windows SDK (10.0.26100.1)
-
-The following Visual Studio workloads need to be installed:
-
-* Desktop development with C++
-* Windows application development
-* Linux and embedded development with C++
-
-The following Visual Studio individual components are also needed:
-
-* C++ ATL for latest build tools
-* C++ ATL for latest build tools with Spectre Mitigations
-* C++ MFC for latest build tools with Spectre mitigations
-* MSVC v140 - VS 2015 build tools
-
-It is also necessary to install:
-* [Microsoft Visual C++ 2022 Redistributable (arm64)](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
-
-The Windows Driver Unit Test Framework is known to work with earlier versions of the Windows Driver Kit and Visual Studio.
-
-In order to build the example projects, a couple of executables need to be copied into tools\bin. The [tools\bin\README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
 
 <a id="status"></a>
 ## Current Status
