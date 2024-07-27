@@ -72,7 +72,7 @@ NTSTATUS KeWaitForMultipleObjects(ULONG Count, PVOID Object[], WAIT_TYPE WaitTyp
 	ULONG i = 0;
 
 	if (Count >= MAXIMUM_WAIT_OBJECTS) {
-		KeBugCheck(0xC);
+		KeBugCheck(MAXIMUM_WAIT_OBJECTS_EXCEEDED);
 		return STATUS_UNSUCCESSFUL;
 	}
 

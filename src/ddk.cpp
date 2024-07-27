@@ -601,39 +601,6 @@ NTSTATUS ZwQuerySymbolicLinkObject(HANDLE LinkHandle,
 }
 
 
-/*
- *	Kernel Error Routines
- */
-
-DDKAPI
-VOID KeBugCheck(ULONG BugCheckCode)
-{
-	fprintf(stderr, "BugCheck Code %x\n", BugCheckCode);
-	exit(0);
-}
-
-
-DDKAPI
-VOID KeBugCheckEx(ULONG BugCheckCode, ULONG_PTR BugCheckParameter1,
-	ULONG_PTR BugCheckParameter2, ULONG_PTR BugCheckParameter3, ULONG_PTR BugCheckParameter4)
-{
-	fprintf(stderr, "BugCheck Code %x, 0x%I64x, 0x%I64x, 0x%I64x, 0x%I64x\n", BugCheckCode,
-		BugCheckParameter1, BugCheckParameter2, BugCheckParameter3, BugCheckParameter4);
-	exit(0);
-}
-
-
-DDKAPI
-BOOLEAN IoRaiseInformationalHardError(NTSTATUS ErrorStatus,
-		PUNICODE_STRING String, PKTHREAD Thread)
-{
-	UNREFERENCED_PARAMETER(String);
-	UNREFERENCED_PARAMETER(Thread);
-
-	fprintf(stderr, "HardError %x\n", ErrorStatus);
-	return TRUE;
-}
-
 DDKAPI
 VOID KeSetSystemAffinityThread(KAFFINITY Affinity)
 {
@@ -716,49 +683,12 @@ KeQueryLogicalProcessorRelationship(PPROCESSOR_NUMBER ProcessorNumber,
 	return STATUS_NOT_IMPLEMENTED;
 }
 
-_Analysis_noreturn_
-void DdkFail(wchar_t *s)
-{
-	ULONG_PTR v[2];
-
-	fprintf(stderr, "%S\n", s);
-
-	v[0] = (ULONG_PTR)s;
-	v[1] = NULL;
-	RaiseException(EXCEPTION_UNITTEST_ASSERTION, EXCEPTION_NONCONTINUABLE, 2, v);
-	exit(0);
-}
-
 
 size_t _SizeofEvent_ = sizeof(KEVENT);
 size_t _SizeofMutex_ = sizeof(KMUTEX);
 size_t _SizeofTimer_ = sizeof(KTIMER);
 size_t _SizeofSemaphore_ = sizeof(KSEMAPHORE);
 size_t _SizeofDpc_ = sizeof(KDPC);
-
-
-DDKAPI
-BOOLEAN KeRegisterBugCheckReasonCallback(
-	PKBUGCHECK_REASON_CALLBACK_RECORD CallbackRecord,
-	PKBUGCHECK_REASON_CALLBACK_ROUTINE CallbackRoutine,
-	KBUGCHECK_CALLBACK_REASON Reason,
-	PUCHAR Component)
-{
-	UNREFERENCED_PARAMETER(CallbackRecord);
-	UNREFERENCED_PARAMETER(CallbackRoutine);
-	UNREFERENCED_PARAMETER(Reason);
-	UNREFERENCED_PARAMETER(Component);
-	return true;
-}
-
-
-DDKAPI
-BOOLEAN KeDeregisterBugCheckReasonCallback(
-	PKBUGCHECK_REASON_CALLBACK_RECORD CallbackRecord)
-{
-	UNREFERENCED_PARAMETER(CallbackRecord);
-	return true;
-}
 
 
 DDKAPI

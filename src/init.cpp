@@ -15,6 +15,7 @@
 
 
 void DdkInit();
+void DdkInitError();
 void DdkCpuInit();
 void DdkTimeInit();
 void DdkNameInit();
@@ -42,6 +43,7 @@ void DdkInit()
 
 	if (!initialised) {
 		DdkExceptionInit();
+		DdkInitError();
 		DdkCpuInit();
 		DdkTimeInit();
 		DdkNameInit();

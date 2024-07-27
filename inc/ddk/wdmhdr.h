@@ -15,6 +15,7 @@
 #define _WDMHDR_H_
 
 #include <ntdef.h>
+#include <bugcodes.h>
 
 
 /*

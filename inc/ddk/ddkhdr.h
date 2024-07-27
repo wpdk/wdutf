@@ -17,6 +17,7 @@ extern "C" {
 
 #include <ntstatus.h>
 #include <ntdef.h>
+#include <bugcodes.h>
 
 /*
  *	Check character set
