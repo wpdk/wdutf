@@ -2,6 +2,7 @@
  *  SPDX-License-Identifier: BSD-3-Clause
  *
  *  Copyright (c) 1998-2015, DataCore Software Corporation. All rights reserved.
+ *  Copyright (c) 2024, rtegrity ltd. All rights reserved.
  *
  *  Details about the Windows Kernel API are based on the documentation
  *  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
@@ -184,7 +185,8 @@ NTSTATUS DdkCreateDriver(char *pName, PDRIVER_INITIALIZE DriverInit, PIMAGE Imag
 		pDriver->Driver.MajorFunction[i] = DdkDefaultDispatch;
 
 	wchar_t params[MAX_PATH+1];
-	swprintf(params, sizeof(params), L"%s\\Parameters", pDriver->Name);
+	swprintf(params, sizeof(params) / sizeof(WCHAR),
+		L"%s\\Parameters", pDriver->Name);
 
 	RtlCreateRegistryKey(RTL_REGISTRY_SERVICES, pDriver->Name);
 	RtlCreateRegistryKey(RTL_REGISTRY_SERVICES, params);
@@ -210,7 +212,7 @@ NTSTATUS DdkDriverEntry(PDRIVER_OBJECT DriverObject)
 	wchar_t wname[MAX_PATH+1];
 	UNICODE_STRING u;
 
-	swprintf(wname, sizeof(wname),
+	swprintf(wname, sizeof(wname) / sizeof(WCHAR),
 		L"\\Registry\\Machine\\System\\CurrentControlSet\\Services\\%s",
 		DriverObject->DriverName.Buffer);
 

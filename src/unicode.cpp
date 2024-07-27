@@ -2,6 +2,7 @@
  *  SPDX-License-Identifier: BSD-3-Clause
  *
  *  Copyright (c) 1998-2015, DataCore Software Corporation. All rights reserved.
+ *  Copyright (c) 2024, rtegrity ltd. All rights reserved.
  *
  *  Details about the Windows Kernel API are based on the documentation
  *  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
@@ -346,7 +347,7 @@ NTSTATUS RtlStringFromGUID(REFGUID Guid, PUNICODE_STRING GuidString)
 	GuidString->MaximumLength = 39 * sizeof(WCHAR);
 	GuidString->Length = 38 * sizeof(WCHAR);
 
-	int count = swprintf(GuidString->Buffer, L"{%08lX-%04hX-%04hX-%02hhX%02hhX-%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX}",
+	int count = swprintf(GuidString->Buffer, 39, L"{%08lX-%04hX-%04hX-%02hhX%02hhX-%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX}",
 		Guid.Data1, Guid.Data2, Guid.Data3,
 		Guid.Data4[0], Guid.Data4[1], Guid.Data4[2], Guid.Data4[3],
 		Guid.Data4[4], Guid.Data4[5], Guid.Data4[6], Guid.Data4[7]);

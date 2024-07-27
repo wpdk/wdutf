@@ -2,6 +2,7 @@
  *  SPDX-License-Identifier: BSD-3-Clause
  *
  *  Copyright (c) 1998-2013, DataCore Software Corporation. All rights reserved.
+ *  Copyright (c) 2024, rtegrity ltd. All rights reserved.
  *
  *  Details about the Windows Kernel API are based on the documentation
  *  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
@@ -41,8 +42,10 @@ namespace DdkUnitTest
 			DdkThreadInit();
 
 			sprintf(DriverName, "DRV%I64d:%d", (LONGLONG)this, GetUniqueId());
-			swprintf(DeviceName, L"\\Device\\D%I64d:%d", (LONGLONG)this, GetUniqueId());
-			swprintf(LinkName, L"\\Device\\L%I64d:%d", (LONGLONG)this, GetUniqueId());
+			swprintf(DeviceName, sizeof(DeviceName) / sizeof(WCHAR),
+				L"\\Device\\D%I64d:%d", (LONGLONG)this, GetUniqueId());
+			swprintf(LinkName, sizeof(LinkName) / sizeof(WCHAR),
+				L"\\Device\\L%I64d:%d", (LONGLONG)this, GetUniqueId());
 
 			pDriver = 0;
 			pDevice = 0;

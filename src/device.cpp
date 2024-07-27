@@ -2,6 +2,7 @@
  *  SPDX-License-Identifier: BSD-3-Clause
  *
  *  Copyright (c) 1998-2015, DataCore Software Corporation. All rights reserved.
+ *  Copyright (c) 2024, rtegrity ltd. All rights reserved.
  *
  *  Details about the Windows Kernel API are based on the documentation
  *  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
@@ -76,7 +77,8 @@ NTSTATUS IoCreateDevice(PDRIVER_OBJECT DriverObject, ULONG DeviceExtensionSize,
 		UNICODE_STRING u;
 		WCHAR buf[30];
 
-		swprintf(buf, sizeof(buf), L"\\Device\\%08x", InterlockedIncrement(&UniqueId));
+		swprintf(buf, sizeof(buf) / sizeof(WCHAR),
+			L"\\Device\\%08x", InterlockedIncrement(&UniqueId));
 		RtlInitUnicodeString(&u, buf);
 
 		if (!DdkInsertName(&u, pDevice, L"\\Device", &pDevice->DeviceName))

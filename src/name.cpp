@@ -2,6 +2,7 @@
  *  SPDX-License-Identifier: BSD-3-Clause
  *
  *  Copyright (c) 1998-2015, DataCore Software Corporation. All rights reserved.
+ *  Copyright (c) 2024, rtegrity ltd. All rights reserved.
  *
  *  Details about the Windows Kernel API are based on the documentation
  *  available at https://learn.microsoft.com/en-us/windows-hardware/drivers/
@@ -180,7 +181,7 @@ POBJECT DdkLookupName(PWCH Name, PWCH Dir)
 POBJECT DdkLookupName(char *Name, PWCH Dir)
 {
 	WCHAR wname[256];
-	swprintf(wname, sizeof(wname), L"%S", Name);
+	swprintf(wname, sizeof(wname) / sizeof(WCHAR), L"%S", Name);
 	return DdkLookupName(wname, Dir);
 }
 
