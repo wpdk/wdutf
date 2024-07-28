@@ -71,10 +71,8 @@ NTSTATUS KeWaitForMultipleObjects(ULONG Count, PVOID Object[], WAIT_TYPE WaitTyp
 	HANDLE h[MAXIMUM_WAIT_OBJECTS];
 	ULONG i = 0;
 
-	if (Count >= MAXIMUM_WAIT_OBJECTS) {
+	if (Count > (WaitBlockArray ? MAXIMUM_WAIT_OBJECTS : ThreadWaitObjects))
 		KeBugCheck(MAXIMUM_WAIT_OBJECTS_EXCEEDED);
-		return STATUS_UNSUCCESSFUL;
-	}
 
 	for (; i < Count; i++) {
 		obj[i] = GetDispatch(FromPointer(Object[i]));

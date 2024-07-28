@@ -83,4 +83,5 @@ void DdkGetLocalPath(char *buffer, size_t len, char *path, char *file, char *suf
 
 
 extern size_t _SizeofEvent_, _SizeofMutex_, _SizeofTimer_, _SizeofSemaphore_, _SizeofDpc_;
+extern ULONG ThreadWaitObjects;
 

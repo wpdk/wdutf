@@ -684,13 +684,6 @@ KeQueryLogicalProcessorRelationship(PPROCESSOR_NUMBER ProcessorNumber,
 }
 
 
-size_t _SizeofEvent_ = sizeof(KEVENT);
-size_t _SizeofMutex_ = sizeof(KMUTEX);
-size_t _SizeofTimer_ = sizeof(KTIMER);
-size_t _SizeofSemaphore_ = sizeof(KSEMAPHORE);
-size_t _SizeofDpc_ = sizeof(KDPC);
-
-
 DDKAPI
 BOOLEAN MmIsAddressValid(PVOID VirtualAddress)
 {
