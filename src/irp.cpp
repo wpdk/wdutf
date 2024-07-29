@@ -187,19 +187,42 @@ NTSTATUS IofCallDriver(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 }
 
 
+static
+void ClearStackLocation (PIO_STACK_LOCATION pStack)
+{
+	// Preserve DeviceObject (see MULTIPLE_IRP_COMPLETE_REQUESTS)
+
+	pStack->MinorFunction = 0;
+	pStack->Flags = 0;
+	pStack->Control = 0;
+	pStack->Parameters.Others.Argument1 = 0;
+	pStack->Parameters.Others.Argument2 = 0;
+	pStack->Parameters.Others.Argument3 = 0;
+	pStack->FileObject = NULL;
+}
+
+
 DDKAPI
 VOID IofCompleteRequest(PIRP Irp, CCHAR PriorityBoost)
 {
-	while (Irp->CurrentLocation <= Irp->StackCount) {
-		PIO_STACK_LOCATION pStack = IoGetCurrentIrpStackLocation(Irp);
+	PIO_STACK_LOCATION pStack;
+
+	if (Irp->CurrentLocation > Irp->StackCount + 1)
+		KeBugCheckEx(MULTIPLE_IRP_COMPLETE_REQUESTS, (ULONG_PTR)Irp, 0, 0, 0);
+
+	// Complete IRP stack
+
+	for (pStack = Irp->Tail.Overlay.CurrentStackLocation++, Irp->CurrentLocation++;
+		Irp->CurrentLocation <= Irp->StackCount + 1;
+		pStack = Irp->Tail.Overlay.CurrentStackLocation++, Irp->CurrentLocation++)
+	{
 		PIO_COMPLETION_ROUTINE Completion = pStack->CompletionRoutine;
 		PVOID Context = pStack->Context;
 		UCHAR Control = pStack->Control;
 
 		Irp->PendingReturned = ((Control & SL_PENDING_RETURNED) != 0);
 
-		IoSkipCurrentIrpStackLocation(Irp);
-		memset(pStack, 0, sizeof(*pStack));
+		ClearStackLocation(pStack);
 
 		if ((NT_SUCCESS(Irp->IoStatus.Status) && (Control & SL_INVOKE_ON_SUCCESS))
 		|| (!NT_SUCCESS(Irp->IoStatus.Status) && (Control & SL_INVOKE_ON_ERROR))
@@ -217,6 +240,9 @@ VOID IofCompleteRequest(PIRP Irp, CCHAR PriorityBoost)
 			IoMarkIrpPending(Irp);
 	}
 
-	ddkfail("IoCompleteRequest completing IRP");
+	// Unlock pages in MDL
+
+	for (PMDL pMdl = Irp->MdlAddress; pMdl; pMdl = pMdl->Next)
+		MmUnlockPages(pMdl);
 }
 
