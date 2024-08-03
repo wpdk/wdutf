@@ -170,6 +170,11 @@
   <ItemGroup>
     <CustomBuild Include="DcsBasic.def" />
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\BasicDriver\DcsBasic.inf">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

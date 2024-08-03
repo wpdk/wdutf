@@ -42,4 +42,7 @@
   <ItemGroup>
     <CustomBuild Include="DcsBasic.def" />
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\BasicDriver\DcsBasic.inf" />
+  </ItemGroup>
 </Project>
