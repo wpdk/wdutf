@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{57591A08-A84F-4758-BFD5-CD3A82237C7F}</ProjectGuid>
+    <ProjectName>Detours</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean
+nmake</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean
+nmake</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean
+nmake</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
+cd ..\..\detours\src
+nmake clean
+nmake</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

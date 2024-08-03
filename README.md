@@ -79,17 +79,7 @@ In order to build the example projects, a couple of executables need to be copie
 The project is designed to be used in conjunction with [Visual Studio](https://visualstudio.microsoft.com/)
 and the [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk).
 
-Firstly, build the Detours library by opening a Developer Command Prompt for Visual Studio and running the following commands:
-
-~~~{.sh}
-# Only on arm64: Ensure that the target is correctly set
-VsDevCmd -arch=arm64
-
-cd detours\src
-nmake
-~~~
-
-The Windows Driver Unit Test Framework project can then be built using
+The Windows Driver Unit Test Framework project can be built using
 the Visual Studio solution WDUTF.sln. Ensure that the configuration is set to the correct processor architecture before building. The Test Explorer can be opened with the menu entry Test/Test Explorer.
 
 <a id="status"></a>
