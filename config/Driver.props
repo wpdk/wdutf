@@ -10,7 +10,7 @@
     <CommonDir>$(CoreDir)inc\</CommonDir>
     <BinDir>$(BaseDir)Tools\Bin\</BinDir>
     <SedCmd>$(BinDir)sed.exe</SedCmd>
-    <DbhCmd>$(BinDir)dbh.exe</DbhCmd>
+    <DbhCmd>"$(WindowsSDKDir)Debuggers\$(PROCESSOR_ARCHITECTURE.ToLower().Replace('amd64','x64'))\dbh.exe"</DbhCmd>
     <NoSizedDealloc Condition="'$(PlatformToolsetVersion)'!='120'">/Zc:sizedDealloc-</NoSizedDealloc>
   </PropertyGroup>
   <PropertyGroup>

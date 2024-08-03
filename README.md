@@ -64,14 +64,14 @@ The following Visual Studio individual components are also needed (for either x6
 
 The following are also required (installed in the following order):
 
-* [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) (10.0.26100.1)
+* [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) (10.0.26100.1) - install all components
 * [Windows Driver Kit](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
 (10.0.26100.1)
 * [Microsoft Visual C++ 2022 Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) (x64 or arm64)
 
-The Windows Driver Unit Test Framework is known to work with earlier versions of the Windows Driver Kit and Visual Studio.
+The Windows Driver Unit Test Framework may work with earlier versions of the Windows Driver Kit and Visual Studio.
 
-In order to build the example projects, a couple of executables need to be copied into tools\bin. The [tools\bin\README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
+In order to build the example projects, an executable needs to be copied into tools\bin. The [tools\bin\README](https://github.com/wpdk/wdutf/blob/main/tools/bin/README.md) contains details.
 
 <a id="start"></a>
 ## Getting Started

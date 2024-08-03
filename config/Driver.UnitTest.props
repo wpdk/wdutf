@@ -9,7 +9,7 @@
     <CommonDir>$(CoreDir)inc\</CommonDir>
     <BinDir>$(BaseDir)Tools\Bin\</BinDir>
     <SedCmd>$(BinDir)sed.exe</SedCmd>
-    <DbhCmd>$(BinDir)dbh.exe</DbhCmd>
+    <DbhCmd>"$(WindowsSDKDir)Debuggers\$(PROCESSOR_ARCHITECTURE.ToLower().Replace('amd64','x64'))\dbh.exe"</DbhCmd>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(BaseDir)build\Target\$(BuildType)-$(CpuType)\vsTest\</OutDir>
