@@ -60,14 +60,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake</NMakeBuildCommandLine>
+nmake /nologo</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean</NMakeCleanCommandLine>
+nmake /nologo clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean
-nmake</NMakeReBuildCommandLine>
+nmake /nologo clean
+nmake /nologo</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
@@ -75,14 +75,14 @@ nmake</NMakeReBuildCommandLine>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake</NMakeBuildCommandLine>
+nmake /nologo</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean</NMakeCleanCommandLine>
+nmake /nologo clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean
-nmake</NMakeReBuildCommandLine>
+nmake /nologo clean
+nmake /nologo</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
@@ -90,14 +90,14 @@ nmake</NMakeReBuildCommandLine>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake</NMakeBuildCommandLine>
+nmake /nologo</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean</NMakeCleanCommandLine>
+nmake /nologo clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean
-nmake</NMakeReBuildCommandLine>
+nmake /nologo clean
+nmake /nologo</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
@@ -105,14 +105,14 @@ nmake</NMakeReBuildCommandLine>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <NMakeBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake</NMakeBuildCommandLine>
+nmake /nologo</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean</NMakeCleanCommandLine>
+nmake /nologo clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>SET DETOURS_TARGET_PROCESSOR=$(PlatformTarget)
 cd ..\..\detours\src
-nmake clean
-nmake</NMakeReBuildCommandLine>
+nmake /nologo clean
+nmake /nologo</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IntDir>$(SolutionDir)build\Intermediate\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)build\Target\$(Configuration)-$(Platform.ToLower().Replace('x64','amd64'))\</OutDir>
